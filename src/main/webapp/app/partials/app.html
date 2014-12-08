@@ -1,0 +1,40 @@
+<div class="navbar navbar-default navbar-static-top ng-scope">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Bacabs</a>
+    </div>
+    <div class="nav navbar-nav navbar-right">
+      <ul>
+        <li ng-if="!allowDesktopNotifications">
+          <a style="margin-top:8px" ng-click="requestNotifications()" class="btn btn-primary btn-sm">Enable Desktop Notifications</a>
+        </li>
+        <li ng-if="allowDesktopNotifications">
+          <a style="margin-top:8px" ng-click="stopNotifications()" class="btn btn-primary btn-sm">Stop Desktop Notifications</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-push-2">
+      <h2>Deployed Applications</h2>
+      
+      <div ng-if="!deployments || deployments.length == 0">
+        <p>There are currently no deployments of interest.</p>
+        <p>Keep watching though, as this page updates automatically!</p>
+      </div>
+      
+      <div ng-if="deployments && deployments.length > 0">
+        <p>The following applications are deployed in the server.</p>
+        <table class="table table-striped">
+          <tr ng-repeat="deployment in deployments | orderBy:identifier:reverse">
+            <td><a href="{{deployment.href}}">{{deployment.identifier}}</a></td>
+            <td>{{deployment.summary}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

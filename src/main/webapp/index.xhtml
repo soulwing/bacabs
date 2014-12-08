@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  ng-app="bacabs">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bacabs Dashboard</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/yeti/bootstrap.min.css" />
+</head>
+<body>
+
+  <div id="pageRoot" ui-view=""></div>
+
+  <script type="text/javascript">var CONTEXT_BASE = "#{request.contextPath}";</script>
+  <script type="text/javascript" src="//code.jquery.com/jquery.min.js"></script>
+  <!-- build:js scripts/dashboard.js -->
+  <script type="text/javascript" src="#{request.contextPath}/bower_components/angular/angular.js"></script>
+  <script type="text/javascript" src="#{request.contextPath}/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script type="text/javascript" src="app/services/CacheService.js"></script>
+  <script type="text/javascript" src="app/services/DeploymentService.js"></script>
+  <script type="text/javascript" src="app/services/NotificationService.js"></script>
+  <script type="text/javascript" src="app/services/WebSocketService.js"></script>
+  <script type="text/javascript" src="app/directives.js"></script>
+  <script type="text/javascript" src="app/services.js"></script>
+  <script type="text/javascript" src="app/controllers.js"></script>
+  <script type="text/javascript" src="app/app.js"></script>
+  <!-- endbuild -->
+  
+</body>
+</html>
