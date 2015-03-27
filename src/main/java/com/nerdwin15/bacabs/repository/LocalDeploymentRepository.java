@@ -32,7 +32,6 @@ import com.nerdwin15.bacabs.Deployment;
  * An in-memory implementation of the {@link DeploymentRepository}
  *
  * @author Michael Irwin
- * @author Chris Dunavant
  */
 @ApplicationScoped
 public class LocalDeploymentRepository implements DeploymentRepository {

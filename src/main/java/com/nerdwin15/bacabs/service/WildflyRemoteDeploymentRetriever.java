@@ -39,7 +39,12 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.Property;
 
 import com.nerdwin15.bacabs.ConcreteDeployment;
+import com.nerdwin15.bacabs.ConcreteGitlabBranch;
+import com.nerdwin15.bacabs.ConcreteJiraIssue;
 import com.nerdwin15.bacabs.Deployment;
+import com.nerdwin15.bacabs.service.gitlab.GitlabBranchRetrievalService;
+import com.nerdwin15.bacabs.service.jira.JiraIssueRetrievalService;
+import com.nerdwin15.bacabs.service.jira.JiraLoginService;
 
 /**
  * Defines a service that is used to sync the deployments by asking the JBoss
@@ -61,6 +66,18 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
   
   @Inject @org.soulwing.cdi.properties.Property
   protected String hrefRoot;
+
+  @Inject @org.soulwing.cdi.properties.Property
+  protected String jiraIdPattern;
+  
+  @Inject
+  private JiraLoginService casLoginService;
+  
+  @Inject 
+  JiraIssueRetrievalService jiraIssueRetrievalService;
+
+  @Inject 
+  GitlabBranchRetrievalService gitlabBranchRetrievalService;
   
   protected ModelControllerClient wildflyClient;
   
@@ -85,11 +102,64 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
       String href = getHref(property.getName());
       if (href == null || href.isEmpty())
         continue;
+      
+      String identifier = href.substring(1);
+     
+      ConcreteJiraIssue issue = null;
+      ConcreteGitlabBranch branch = null;
+      if (identifier != null 
+          && !identifier.isEmpty() 
+          && identifier.contains(jiraIdPattern)) {
+        issue = getJiraIssue(identifier);
+        branch = getGitlabBranch(identifier);
+      }
+      
       ConcreteDeployment deployment = new ConcreteDeployment();
       deployment.setHref(hrefRoot + href);
-      deployment.setIdentifier(href.substring(1));
+      deployment.setIdentifier(identifier);
+      deployment.setJiraIssue(issue);
+      deployment.setGitlabBranch(branch);
       deployments.add(deployment);
     }
+
+    /*
+    // Mocked data for testing
+    ConcreteDeployment deployment = new ConcreteDeployment();
+    deployment.setHref(hrefRoot + "/CREST-1033");
+    deployment.setIdentifier("CREST-1033");
+    deployment.setJiraIssue(getJiraIssue("CREST-1033"));
+    deployment.setGitlabBranch(getGitlabBranch("CREST-1033"));
+    deployments.add(deployment);
+    
+    ConcreteDeployment deployment2 = new ConcreteDeployment();
+    deployment2.setHref(hrefRoot + "/CREST-965");
+    deployment2.setIdentifier("CREST-965");
+    deployment2.setJiraIssue(getJiraIssue("CREST-965"));
+    deployment2.setGitlabBranch(getGitlabBranch("CREST-965"));
+    deployments.add(deployment2);
+    
+    ConcreteDeployment deployment3 = new ConcreteDeployment();
+    deployment3.setHref(hrefRoot + "/CREST-1039");
+    deployment3.setIdentifier("CREST-1039");
+    deployment3.setJiraIssue(getJiraIssue("CREST-1039"));
+    deployment3.setGitlabBranch(getGitlabBranch("CREST-1039"));
+    deployments.add(deployment3);
+    
+    ConcreteDeployment deployment4 = new ConcreteDeployment();
+    deployment4.setHref(hrefRoot + "/CREST-131");
+    deployment4.setIdentifier("CREST-131");
+    deployment4.setJiraIssue(getJiraIssue("CREST-131"));
+    deployment4.setGitlabBranch(getGitlabBranch("CREST-131"));
+    deployments.add(deployment4);
+    
+    ConcreteDeployment deployment5 = new ConcreteDeployment();
+    deployment5.setHref(hrefRoot + "/CREST-1161");
+    deployment5.setIdentifier("CREST-1161");
+    deployment5.setJiraIssue(getJiraIssue("CREST-1161"));
+    deployment5.setGitlabBranch(getGitlabBranch("CREST-1161"));
+    deployments.add(deployment5);
+    // End - mocked data 
+    */
     
     return deployments;
   }
@@ -105,4 +175,18 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
     return null;
   }
 
+  private ConcreteJiraIssue getJiraIssue(String identifier) {
+    try {
+      String url = casLoginService.getAuthenticatedRestUrl(identifier);
+      return (ConcreteJiraIssue) jiraIssueRetrievalService.retrieveJiraIssue(url);
+    }
+    catch (IOException e) {
+      System.out.println("Unable to retrieve Jira Issue.  IO problem occurred.");
+      return null;
+    }
+  }
+  
+  private ConcreteGitlabBranch getGitlabBranch(String identifier) {
+    return (ConcreteGitlabBranch) gitlabBranchRetrievalService.retrieveGitlabBranch(identifier); 
+  }
 }
