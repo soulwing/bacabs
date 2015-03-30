@@ -42,4 +42,16 @@ public interface Deployment {
    * @return The summary
    */
   String getSummary();
+  
+  /**
+   * Get the Jira issue associated with this deployment
+   * @ return the jiraIssue
+   */
+  JiraIssue getJiraIssue();
+  
+  /**
+   * Get the Gitlab branch associated with this deployment
+   * @ return the gitlabBranch
+   */
+  GitlabBranch getGitlabBranch();
 }

@@ -20,18 +20,54 @@
   <div class="row">
     <div class="col-md-8 col-md-push-2">
       <h2>Deployed Applications</h2>
-      
+
       <div ng-if="!deployments || deployments.length == 0">
         <p>There are currently no deployments of interest.</p>
         <p>Keep watching though, as this page updates automatically!</p>
       </div>
-      
+
       <div ng-if="deployments && deployments.length > 0">
         <p>The following applications are deployed in the server.</p>
         <table class="table table-striped">
-          <tr ng-repeat="deployment in deployments | orderBy:identifier:reverse">
+          <tr>
+            <th>Deployment</th>
+            <th>Summary</th>
+            <th>
+              Description
+            </th>
+            <th>
+              Acceptance Task Status?
+            </th>
+            <th>
+              % Progress
+            </th>
+            <th>
+              Code Last Updated
+            </th>
+          </tr>
+          <tr ng-repeat="deployment in deployments | orderBy:'identifier':reverse" ng-class="{'strikethru' : deployment.jiraIssue.statusName == 'Closed'}">
             <td><a href="{{deployment.href}}">{{deployment.identifier}}</a></td>
-            <td>{{deployment.summary}}</td>
+            <td>
+              {{deployment.jiraIssue.summary}}
+            </td>
+            <td>
+              {{deployment.jiraIssue.description}}
+            </td>
+            <td>
+              {{deployment.jiraIssue.acceptanceTaskStatusName || "<em>No Acceptance Test</em>"}}
+            </td>
+            <td>
+              {{deployment.jiraIssue.progressPercentage || 0}}% in
+              {{deployment.jiraIssue.numTasks || 0}} Tasks
+            </td>
+            <td>
+             <span ng-if="deployment.gitlabBranch">
+              {{deployment.gitlabBranch.commitDate | date:'MM/dd/yyyy @ h:mma'}} by <em>{{deployment.gitlabBranch.committerName}}</em>
+             </span>
+             <span ng-if="!deployment.gitlabBranch">
+               Merged to qa (or other branch)
+             </span>
+            </td>
           </tr>
         </table>
       </div>

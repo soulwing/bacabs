@@ -42,6 +42,12 @@ public class ConcreteDeployment implements Deployment {
   @XmlElement
   private String summary;
   
+  @XmlElement
+  private ConcreteJiraIssue jiraIssue;
+
+  @XmlElement
+  private ConcreteGitlabBranch gitlabBranch;
+  
   /**
    * {@inheritDoc}
    */
@@ -88,6 +94,30 @@ public class ConcreteDeployment implements Deployment {
    */
   public void setSummary(String summary) {
     this.summary = summary;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public ConcreteJiraIssue getJiraIssue() {
+    return jiraIssue;
+  }
+  
+  public void setJiraIssue(ConcreteJiraIssue jiraIssue) {
+    this.jiraIssue = jiraIssue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public GitlabBranch getGitlabBranch() {
+    return gitlabBranch;
+  }
+
+  public void setGitlabBranch(ConcreteGitlabBranch gitlabBranch) {
+    this.gitlabBranch = gitlabBranch;
   }
   
   /**
