@@ -36,7 +36,7 @@ public interface JiraLoginService {
   String getAuthenticatedRestUrl(String identifier) throws IOException;
   
   /**
-   * With the TGT location and service url this will get the SGT
+   * With the TGT localRepoLocation and service url this will get the SGT
    * @param tgtLocation
    * @param serviceUrl
    * @return

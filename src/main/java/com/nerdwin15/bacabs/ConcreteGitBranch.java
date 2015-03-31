@@ -24,17 +24,17 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.nerdwin15.bacabs.service.gitlab.GitlabBranchDeserializer;
+import com.nerdwin15.bacabs.service.git.GitBranchDeserializer;
 
 /**
- * Implementation of {@link GitlabBranch}.
+ * Implementation of {@link GitBranch}.
  *
  * @author Christopher M. Dunavant
  */
-@XmlRootElement(name = "gitlabBranch")
+@XmlRootElement(name = "branch")
 @XmlAccessorType(XmlAccessType.FIELD)
-@JsonDeserialize(using = GitlabBranchDeserializer.class)
-public class ConcreteGitlabBranch implements GitlabBranch {
+@JsonDeserialize(using = GitBranchDeserializer.class)
+public class ConcreteGitBranch implements GitBranch {
 
   @XmlElement
   private String committerName;

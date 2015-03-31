@@ -16,21 +16,24 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.bacabs.service.gitlab;
-
-import com.nerdwin15.bacabs.GitlabBranch;
+package com.nerdwin15.bacabs;
 
 /**
- * A service that is used to retrieve a branch from a Gitlab
- * REST endpoint.
+ * Describes a Gitlab Branch.
  *
- * @author Chris Dunavant
+ * @author Christopher M. Dunavant
  */
-public interface GitlabBranchRetrievalService {
+public interface GitBranch {
 
   /**
-   * Retrieve the information for a given Gitlab branch
-   * @param url The authenticated REST url
+   * Get the name of the committer for the branch
+   * @return name
    */
-  GitlabBranch retrieveGitlabBranch(String branch);
+  public String getCommitterName();
+  
+  /**
+   * Get the date of the last commit for the branch
+   * @return date
+   */
+  public String getCommitDate();
 }
