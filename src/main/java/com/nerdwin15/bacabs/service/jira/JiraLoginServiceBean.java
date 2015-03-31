@@ -64,7 +64,7 @@ public class JiraLoginServiceBean implements JiraLoginService {
 
     HttpURLConnection conn = (HttpURLConnection) connectionUrl.openConnection();
     
-    // We don't want to follow the redirect ... we want the url location 
+    // We don't want to follow the redirect ... we want the url localRepoLocation
     // with the jsessionid
     conn.setInstanceFollowRedirects(false);
     int code = conn.getResponseCode();
@@ -122,7 +122,7 @@ public class JiraLoginServiceBean implements JiraLoginService {
     }
     
     String location = conn.getHeaderField("Location");
-    //System.out.println("TGT LOCATION -> " + location);
+    //System.out.println("TGT LOCATION -> " + localRepoLocation);
     
     return location;
   }

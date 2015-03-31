@@ -16,23 +16,29 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.bacabs.service.gitlab;
+package com.nerdwin15.bacabs.service.git;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 
-import javax.inject.Qualifier;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 /**
- * A qualifier that designates a client producer for the gitlab endpoint.
+ * A bean that produces Gitlab branch client instances.
  *
  * @author Chris Dunavant
  */
-@Qualifier
-@Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, 
-  ElementType.PARAMETER })
-public @interface GitlabClient {
+@ApplicationScoped
+public class GitClientProducerBean {
+
+  @Produces @ApplicationScoped @GitClient
+  public Client createClient() {
+    
+    return ClientBuilder.newBuilder()
+        .register(JacksonJaxbJsonProvider.class)
+        .build();
+  }
+
 }

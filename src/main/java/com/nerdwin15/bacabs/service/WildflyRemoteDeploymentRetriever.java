@@ -39,10 +39,10 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.Property;
 
 import com.nerdwin15.bacabs.ConcreteDeployment;
-import com.nerdwin15.bacabs.ConcreteGitlabBranch;
+import com.nerdwin15.bacabs.ConcreteGitBranch;
 import com.nerdwin15.bacabs.ConcreteJiraIssue;
 import com.nerdwin15.bacabs.Deployment;
-import com.nerdwin15.bacabs.service.gitlab.GitlabBranchRetrievalService;
+import com.nerdwin15.bacabs.service.git.GitBranchRetrievalService;
 import com.nerdwin15.bacabs.service.jira.JiraIssueRetrievalService;
 import com.nerdwin15.bacabs.service.jira.JiraLoginService;
 
@@ -76,8 +76,8 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
   @Inject 
   JiraIssueRetrievalService jiraIssueRetrievalService;
 
-  @Inject 
-  GitlabBranchRetrievalService gitlabBranchRetrievalService;
+  @Inject
+  GitBranchRetrievalService gitBranchRetrievalService;
   
   protected ModelControllerClient wildflyClient;
   
@@ -106,7 +106,7 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
       String identifier = href.substring(1);
      
       ConcreteJiraIssue issue = null;
-      ConcreteGitlabBranch branch = null;
+      ConcreteGitBranch branch = null;
       if (identifier != null 
           && !identifier.isEmpty() 
           && identifier.contains(jiraIdPattern)) {
@@ -186,7 +186,7 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
     }
   }
   
-  private ConcreteGitlabBranch getGitlabBranch(String identifier) {
-    return (ConcreteGitlabBranch) gitlabBranchRetrievalService.retrieveGitlabBranch(identifier); 
+  private ConcreteGitBranch getGitlabBranch(String identifier) {
+    return (ConcreteGitBranch) gitBranchRetrievalService.retrieveGitBranch(identifier);
   }
 }

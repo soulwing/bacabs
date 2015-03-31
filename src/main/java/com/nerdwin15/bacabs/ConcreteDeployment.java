@@ -46,7 +46,7 @@ public class ConcreteDeployment implements Deployment {
   private ConcreteJiraIssue jiraIssue;
 
   @XmlElement
-  private ConcreteGitlabBranch gitlabBranch;
+  private ConcreteGitBranch gitlabBranch;
   
   /**
    * {@inheritDoc}
@@ -112,11 +112,11 @@ public class ConcreteDeployment implements Deployment {
    * {@inheritDoc}
    */
   @Override
-  public GitlabBranch getGitlabBranch() {
+  public GitBranch getGitlabBranch() {
     return gitlabBranch;
   }
 
-  public void setGitlabBranch(ConcreteGitlabBranch gitlabBranch) {
+  public void setGitlabBranch(ConcreteGitBranch gitlabBranch) {
     this.gitlabBranch = gitlabBranch;
   }
   

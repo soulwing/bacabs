@@ -16,28 +16,26 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.bacabs.service.gitlab;
+package com.nerdwin15.bacabs.service.git;
 
 import java.net.URI;
-
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import com.nerdwin15.bacabs.ConcreteGitlabBranch;
-import com.nerdwin15.bacabs.GitlabBranch;
+import com.nerdwin15.bacabs.ConcreteGitBranch;
+import com.nerdwin15.bacabs.GitBranch;
 
 /**
- * Implementation of {@link GitlabBranchRetrievalService}
+ * Implementation of {@link GitBranchRetrievalService}
  *
  * @author Christopher M. Dunavant
  */
-@ApplicationScoped
-public class GitlabBranchRetrievalServiceBean
-    implements GitlabBranchRetrievalService {
+// @ApplicationScoped
+public class RestGitBranchRetrievalServiceBean
+    implements GitBranchRetrievalService {
 
   @Inject @org.soulwing.cdi.properties.Property
   protected String gitlabRestUrl;
@@ -45,20 +43,20 @@ public class GitlabBranchRetrievalServiceBean
   @Inject @org.soulwing.cdi.properties.Property
   protected String gitlabPrivateToken;
   
-  @Inject @GitlabClient
+  @Inject @GitClient
   protected Client client;
   
   /**
    * {@inheritDoc}
    */
   @Override
-  public GitlabBranch retrieveGitlabBranch(String branch) {
+  public GitBranch retrieveGitBranch(String branch) {
 
     URI Uri = UriBuilder.fromUri(gitlabRestUrl + branch).
         queryParam("private_token", gitlabPrivateToken).build();
     try {
       return client.target(Uri).
-        request(MediaType.APPLICATION_JSON).get(ConcreteGitlabBranch.class);
+        request(MediaType.APPLICATION_JSON).get(ConcreteGitBranch.class);
     }
     catch (NotFoundException e) {
       //System.out.println("Not found for: " + gitlabRestUrl + branch);

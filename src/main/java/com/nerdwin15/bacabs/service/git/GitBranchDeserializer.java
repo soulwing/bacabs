@@ -16,7 +16,7 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.bacabs.service.gitlab;
+package com.nerdwin15.bacabs.service.git;
 
 import java.io.IOException;
 
@@ -25,21 +25,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.nerdwin15.bacabs.ConcreteGitlabBranch;
-import com.nerdwin15.bacabs.GitlabBranch;
+import com.nerdwin15.bacabs.ConcreteGitBranch;
+import com.nerdwin15.bacabs.GitBranch;
 
 /**
- * Implemention of {@link JsonDeserializer} for a {@link GitlabBranch}
+ * Implemention of {@link JsonDeserializer} for a {@link GitBranch}
  *
  * @author Christopher M. Dunavant
  */
-public class GitlabBranchDeserializer extends JsonDeserializer<GitlabBranch> {
+public class GitBranchDeserializer extends JsonDeserializer<GitBranch> {
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public GitlabBranch deserialize(JsonParser jp, DeserializationContext ctx)
+  public GitBranch deserialize(JsonParser jp, DeserializationContext ctx)
       throws IOException, JsonProcessingException {
     JsonNode rootNode = jp.getCodec().readTree(jp);
     JsonNode commitNode = rootNode.path("commit");
@@ -53,7 +53,7 @@ public class GitlabBranchDeserializer extends JsonDeserializer<GitlabBranch> {
     String committerName = commitNode.get("committer_name").asText();
     String commitDate = commitNode.get("committed_date").asText();
     
-    ConcreteGitlabBranch branch = new ConcreteGitlabBranch();
+    ConcreteGitBranch branch = new ConcreteGitBranch();
     branch.setCommitterName(committerName);
     branch.setCommitDate(commitDate);
     
