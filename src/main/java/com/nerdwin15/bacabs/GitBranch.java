@@ -19,7 +19,7 @@
 package com.nerdwin15.bacabs;
 
 /**
- * Describes a Gitlab Branch.
+ * Describes a Git Branch.
  *
  * @author Christopher M. Dunavant
  */
@@ -29,11 +29,11 @@ public interface GitBranch {
    * Get the name of the committer for the branch
    * @return name
    */
-  public String getCommitterName();
+  String getCommitterName();
   
   /**
    * Get the date of the last commit for the branch
    * @return date
    */
-  public String getCommitDate();
+  String getCommitDate();
 }

@@ -30,47 +30,47 @@ public interface JiraIssue {
    * Get the summary of the issue
    * @return summary
    */
-  public String getSummary();
+  String getSummary();
   
   /**
    * Get the description of the issue
    * @return description
    */
-  public String getDescription();
+  String getDescription();
 
   /**
    * Get the statusId of the issue
    * @return statusId
    */
-  public Integer getStatusId();
+  Integer getStatusId();
   
   /**
    * Get the statusName of the issue
    * @return statusName
    */
-  public String getStatusName();
+  String getStatusName();
 
   /**
    * Get the number of tasks for the issue
    * @return numTasks
    */
-  public Integer getNumTasks();
+  Integer getNumTasks();
 
   /**
    * Get progress percentage for the issue
    * @return progressPercentage
    */
-  public Integer getProgressPercentage();
+  Integer getProgressPercentage();
   
   /**
    * Get the acceptanceTaskStatusId of the issue
    * @return acceptanceTaskStatusId
    */
-  public Integer getAcceptanceTaskStatusId();
+  Integer getAcceptanceTaskStatusId();
 
   /**
    * Get the acceptanceTaskStatusName of the issue
    * @return acceptanceTaskStatusName
    */
-  public String getAcceptanceTaskStatusName();
+  String getAcceptanceTaskStatusName();
 }
