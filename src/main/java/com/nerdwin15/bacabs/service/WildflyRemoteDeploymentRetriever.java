@@ -45,6 +45,8 @@ import com.nerdwin15.bacabs.Deployment;
 import com.nerdwin15.bacabs.service.git.GitBranchRetrievalService;
 import com.nerdwin15.bacabs.service.jira.JiraIssueRetrievalService;
 import com.nerdwin15.bacabs.service.jira.JiraLoginService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Defines a service that is used to sync the deployments by asking the JBoss
@@ -54,6 +56,8 @@ import com.nerdwin15.bacabs.service.jira.JiraLoginService;
  */
 @ApplicationScoped
 public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriever {
+
+  private static final Logger logger = LoggerFactory.getLogger(WildflyRemoteDeploymentRetriever.class);
 
   @Inject @org.soulwing.cdi.properties.Property
   protected String jbossUsername;
@@ -82,9 +86,13 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
   protected ModelControllerClient wildflyClient;
   
   @PostConstruct
-  public void postConstruct() throws Exception {
-    wildflyClient = ModelControllerClient.Factory.create(
-        InetAddress.getByName("127.0.0.1"), jbossPort);
+  public void postConstruct() {
+    try {
+      wildflyClient = ModelControllerClient.Factory.create(
+          InetAddress.getByName("127.0.0.1"), jbossPort);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
   
   /**
@@ -100,20 +108,21 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
     ModelNode returnVal = wildflyClient.execute(request);
     for (Property property : returnVal.get(RESULT).get(DEPLOYMENT).asPropertyList()) {
       String href = getHref(property.getName());
+      logger.info("Have href: " + href);
       if (href == null || href.isEmpty())
         continue;
-      
+
       String identifier = href.substring(1);
-     
+
       ConcreteJiraIssue issue = null;
       ConcreteGitBranch branch = null;
-      if (identifier != null 
-          && !identifier.isEmpty() 
+      if (identifier != null
+          && !identifier.isEmpty()
           && identifier.contains(jiraIdPattern)) {
         issue = getJiraIssue(identifier);
         branch = getGitlabBranch(identifier);
       }
-      
+
       ConcreteDeployment deployment = new ConcreteDeployment();
       deployment.setHref(hrefRoot + href);
       deployment.setIdentifier(identifier);
@@ -122,45 +131,7 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
       deployments.add(deployment);
     }
 
-    /*
-    // Mocked data for testing
-    ConcreteDeployment deployment = new ConcreteDeployment();
-    deployment.setHref(hrefRoot + "/CREST-1033");
-    deployment.setIdentifier("CREST-1033");
-    deployment.setJiraIssue(getJiraIssue("CREST-1033"));
-    deployment.setGitlabBranch(getGitlabBranch("CREST-1033"));
-    deployments.add(deployment);
-    
-    ConcreteDeployment deployment2 = new ConcreteDeployment();
-    deployment2.setHref(hrefRoot + "/CREST-965");
-    deployment2.setIdentifier("CREST-965");
-    deployment2.setJiraIssue(getJiraIssue("CREST-965"));
-    deployment2.setGitlabBranch(getGitlabBranch("CREST-965"));
-    deployments.add(deployment2);
-    
-    ConcreteDeployment deployment3 = new ConcreteDeployment();
-    deployment3.setHref(hrefRoot + "/CREST-1039");
-    deployment3.setIdentifier("CREST-1039");
-    deployment3.setJiraIssue(getJiraIssue("CREST-1039"));
-    deployment3.setGitlabBranch(getGitlabBranch("CREST-1039"));
-    deployments.add(deployment3);
-    
-    ConcreteDeployment deployment4 = new ConcreteDeployment();
-    deployment4.setHref(hrefRoot + "/CREST-131");
-    deployment4.setIdentifier("CREST-131");
-    deployment4.setJiraIssue(getJiraIssue("CREST-131"));
-    deployment4.setGitlabBranch(getGitlabBranch("CREST-131"));
-    deployments.add(deployment4);
-    
-    ConcreteDeployment deployment5 = new ConcreteDeployment();
-    deployment5.setHref(hrefRoot + "/CREST-1161");
-    deployment5.setIdentifier("CREST-1161");
-    deployment5.setJiraIssue(getJiraIssue("CREST-1161"));
-    deployment5.setGitlabBranch(getGitlabBranch("CREST-1161"));
-    deployments.add(deployment5);
-    // End - mocked data 
-    */
-    
+
     return deployments;
   }
   

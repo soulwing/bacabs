@@ -41,7 +41,7 @@ public class DeploymentsEndpoint {
   
   @Inject
   protected RemoteDeploymentRetriever syncService;
-  
+
   @GET
   public Response getDeployments() throws Exception {
     return Response.ok(deploymentService.getDeployments()).build();

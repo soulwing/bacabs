@@ -21,9 +21,12 @@ package com.nerdwin15.bacabs.service;
 import java.io.IOException;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.soulwing.cdi.properties.Property;
 
 import com.nerdwin15.bacabs.Deployment;
@@ -36,37 +39,45 @@ import com.nerdwin15.bacabs.Deployment;
 @ApplicationScoped
 public class DeploymentSyncServiceBean implements DeploymentSyncService {
 
+  private static final Logger logger = LoggerFactory.getLogger(DeploymentSyncServiceBean.class);
+
   @Inject
   protected RemoteDeploymentRetriever deploymentRetriever;
-  
+
   @Inject
   protected DeploymentService deploymentService;
-  
+
   @Inject @Property
   protected String identifierPattern;
-  
+
+  @PostConstruct
+  public void init() {
+    logger.info("Looking for deployments with pattern: " + identifierPattern);
+  }
+
   /**
    * {@inheritDoc}
    */
   @Override
   public void performDeploymentSync() throws IOException {
     Set<? extends Deployment> knownDeployments = deploymentService.getDeployments();
-    
+
     for (Deployment deployment : deploymentRetriever.fetchDeployments()) {
+      logger.info("Found deployment: " + deployment);
       if (knownDeployments.contains(deployment)) {
         knownDeployments.remove(deployment);
         continue;
       }
-      
+
       if (!deployment.getIdentifier().matches(identifierPattern))
         continue;
-      
+
       deploymentService.addDeployment(deployment);
-      System.out.println("Discovered new deployment: " + deployment);
+      logger.info("Discovered new deployment: " + deployment);
     }
-    
+
     for (Deployment deployment : knownDeployments) {
-      System.out.println("Removing old deployment: " + deployment);
+      logger.info("Removing old deployment: " + deployment);
       deploymentService.removeDeployment(deployment);
     }
   }

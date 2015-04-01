@@ -18,7 +18,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-8 col-md-push-2">
+    <div class="col-md-12">
       <h2>Deployed Applications</h2>
 
       <div ng-if="!deployments || deployments.length == 0">
@@ -54,7 +54,8 @@
               {{deployment.jiraIssue.description}}
             </td>
             <td>
-              {{deployment.jiraIssue.acceptanceTaskStatusName || "<em>No Acceptance Test</em>"}}
+              <span ng-if="deployment.jiraIssue.acceptanceTaskStatusName">{{deployment.jiraIssue.acceptanceTaskStatusName}}</span>
+              <span ng-if="!deployment.jiraIssue.acceptanceTaskStatusName"><em>No Acceptance Test</em></span>
             </td>
             <td>
               {{deployment.jiraIssue.progressPercentage || 0}}% in

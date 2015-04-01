@@ -18,6 +18,9 @@
  */
 package com.nerdwin15.bacabs.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -31,13 +34,20 @@ import javax.inject.Inject;
 @Startup
 @Singleton
 public class SyncTimerBean {
+
+  private static final Logger logger = LoggerFactory.getLogger(SyncTimerBean.class);
   
   @Inject
   protected DeploymentSyncService syncService;
   
   @Schedule(second="*/10", hour="*", minute="*", month="*", persistent=false)
-  public void doSync() throws Exception {
-    syncService.performDeploymentSync();
+  public void doSync() {
+    logger.info("Triggering a sync");
+    try {
+      syncService.performDeploymentSync();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
   
 }

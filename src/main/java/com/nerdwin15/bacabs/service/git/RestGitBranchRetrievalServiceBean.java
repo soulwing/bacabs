@@ -33,9 +33,7 @@ import com.nerdwin15.bacabs.GitBranch;
  *
  * @author Christopher M. Dunavant
  */
-// @ApplicationScoped
-public class RestGitBranchRetrievalServiceBean
-    implements GitBranchRetrievalService {
+public class RestGitBranchRetrievalServiceBean {
 
   @Inject @org.soulwing.cdi.properties.Property
   protected String gitlabRestUrl;
@@ -49,7 +47,6 @@ public class RestGitBranchRetrievalServiceBean
   /**
    * {@inheritDoc}
    */
-  @Override
   public GitBranch retrieveGitBranch(String branch) {
 
     URI Uri = UriBuilder.fromUri(gitlabRestUrl + branch).

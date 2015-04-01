@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.nerdwin15.bacabs.ConcreteGitBranch;
@@ -42,6 +42,8 @@ import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.transport.TagOpt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.soulwing.cdi.properties.Property;
 
 /**
@@ -54,6 +56,8 @@ import org.soulwing.cdi.properties.Property;
 public class LocalGitBranchRetrievalServiceBean
     implements GitBranchRetrievalService {
 
+  private static final Logger logger = LoggerFactory.getLogger(LocalGitBranchRetrievalServiceBean.class);
+
   public static final String REMOTE_BRANCH_FORMAT = "refs/remotes/%s/%s";
 
   public static final String GIT_DIR = ".git";
@@ -63,7 +67,7 @@ public class LocalGitBranchRetrievalServiceBean
   protected URI localRepoLocation;
 
   @Inject @Property
-  protected URI remoteRepoLocation;
+  protected String remoteRepoLocation;
 
   @Inject @Property
   protected URL privateKeyLocation;
@@ -76,11 +80,15 @@ public class LocalGitBranchRetrievalServiceBean
     directory = new File(localRepoLocation);
     if (!directory.exists()) {
       try {
-        clone(directory, REMOTE, remoteRepoLocation.toString());
+        logger.info("Creating clone for repository using : " + remoteRepoLocation);
+        clone(directory, REMOTE, remoteRepoLocation);
       }
       catch (GitAPIException | IOException ex) {
         throw new RuntimeException(ex);
       }
+    }
+    else {
+      logger.info("Using exisiting repository located at: " + localRepoLocation);
     }
   }
 
@@ -94,9 +102,11 @@ public class LocalGitBranchRetrievalServiceBean
           .call();
       for (Ref ref : branches) {
         if (refName.equals(ref.getName())) {
+            System.out.println("FOUND A MATCHING BRANCH");
           return newGitBranch(git, ref);
         }
       }
+        System.out.println("DIDN'T FIND A BRANCH");
       return null;
     }
     catch (GitAPIException | IOException ex) {
