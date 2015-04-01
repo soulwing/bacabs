@@ -63,7 +63,6 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
     Set<? extends Deployment> knownDeployments = deploymentService.getDeployments();
 
     for (Deployment deployment : deploymentRetriever.fetchDeployments()) {
-      logger.info("Found deployment: " + deployment);
       if (knownDeployments.contains(deployment)) {
         knownDeployments.remove(deployment);
         continue;

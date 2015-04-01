@@ -112,11 +112,9 @@ public class LocalGitBranchRetrievalServiceBean
           .call();
       for (Ref ref : branches) {
         if (refName.equals(ref.getName())) {
-            System.out.println("FOUND A MATCHING BRANCH");
           return newGitBranch(git, ref);
         }
       }
-        System.out.println("DIDN'T FIND A BRANCH");
       return null;
     }
     catch (GitAPIException | IOException ex) {
