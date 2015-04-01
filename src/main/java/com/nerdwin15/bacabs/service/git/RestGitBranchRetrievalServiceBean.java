@@ -45,7 +45,11 @@ public class RestGitBranchRetrievalServiceBean
   
   @Inject @GitClient
   protected Client client;
-  
+
+  @Override
+  public void refresh() {
+  }
+
   /**
    * {@inheritDoc}
    */

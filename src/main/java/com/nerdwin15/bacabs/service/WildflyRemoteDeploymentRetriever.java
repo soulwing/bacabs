@@ -98,6 +98,8 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
     request.get(OP_ADDR).add(DEPLOYMENT);
 
     ModelNode returnVal = wildflyClient.execute(request);
+    gitBranchRetrievalService.refresh();
+
     for (Property property : returnVal.get(RESULT).get(DEPLOYMENT).asPropertyList()) {
       String href = getHref(property.getName());
       if (href == null || href.isEmpty())

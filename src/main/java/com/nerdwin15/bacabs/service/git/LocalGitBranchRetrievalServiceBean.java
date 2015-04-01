@@ -85,10 +85,20 @@ public class LocalGitBranchRetrievalServiceBean
   }
 
   @Override
+  public void refresh() {
+    try {
+      fetch(directory, REMOTE);
+    }
+    catch (GitAPIException | IOException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  @Override
   public GitBranch retrieveGitBranch(String branch) {
     String refName = String.format(REMOTE_BRANCH_FORMAT, REMOTE, branch);
     try {
-      Git git = fetch(directory, REMOTE);
+      Git git = newGit(directory);
       List<Ref> branches = git.branchList()
           .setListMode(ListBranchCommand.ListMode.REMOTE)
           .call();
