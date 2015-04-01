@@ -57,34 +57,37 @@ import org.slf4j.LoggerFactory;
 @ApplicationScoped
 public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriever {
 
-  private static final Logger logger = LoggerFactory.getLogger(WildflyRemoteDeploymentRetriever.class);
-
-  @Inject @org.soulwing.cdi.properties.Property
+  @Inject
+  @org.soulwing.cdi.properties.Property
   protected String jbossUsername;
-  
-  @Inject @org.soulwing.cdi.properties.Property
+
+  @Inject
+  @org.soulwing.cdi.properties.Property
   protected String jbossPassword;
-  
-  @Inject @org.soulwing.cdi.properties.Property
+
+  @Inject
+  @org.soulwing.cdi.properties.Property
   protected Integer jbossPort;
-  
-  @Inject @org.soulwing.cdi.properties.Property
+
+  @Inject
+  @org.soulwing.cdi.properties.Property
   protected String hrefRoot;
 
-  @Inject @org.soulwing.cdi.properties.Property
+  @Inject
+  @org.soulwing.cdi.properties.Property
   protected String jiraIdPattern;
-  
+
   @Inject
   private JiraLoginService casLoginService;
-  
-  @Inject 
+
+  @Inject
   JiraIssueRetrievalService jiraIssueRetrievalService;
 
   @Inject
   GitBranchRetrievalService gitBranchRetrievalService;
-  
+
   protected ModelControllerClient wildflyClient;
-  
+
   @PostConstruct
   public void postConstruct() {
     try {
@@ -94,7 +97,7 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
       throw new RuntimeException(e);
     }
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -108,7 +111,6 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
     ModelNode returnVal = wildflyClient.execute(request);
     for (Property property : returnVal.get(RESULT).get(DEPLOYMENT).asPropertyList()) {
       String href = getHref(property.getName());
-      logger.info("Have href: " + href);
       if (href == null || href.isEmpty())
         continue;
 
@@ -134,7 +136,7 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
 
     return deployments;
   }
-  
+
   private String getHref(String deploymentName) throws IOException {
     final ModelNode request = new ModelNode();
     request.get(OP).set(READ_RESOURCE_OPERATION);
@@ -150,13 +152,12 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
     try {
       String url = casLoginService.getAuthenticatedRestUrl(identifier);
       return (ConcreteJiraIssue) jiraIssueRetrievalService.retrieveJiraIssue(url);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       System.out.println("Unable to retrieve Jira Issue.  IO problem occurred.");
       return null;
     }
   }
-  
+
   private ConcreteGitBranch getGitlabBranch(String identifier) {
     return (ConcreteGitBranch) gitBranchRetrievalService.retrieveGitBranch(identifier);
   }
