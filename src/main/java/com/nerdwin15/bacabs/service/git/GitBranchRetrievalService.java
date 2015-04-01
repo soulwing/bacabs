@@ -21,16 +21,24 @@ package com.nerdwin15.bacabs.service.git;
 import com.nerdwin15.bacabs.GitBranch;
 
 /**
- * A service that is used to retrieve a branch from a Gitlab
- * REST endpoint.
+ * A service that is used to retrieve a branches from a Git
+ * repository.
  *
  * @author Chris Dunavant
+ * @author Carl Harris
  */
 public interface GitBranchRetrievalService {
 
   /**
-   * Retrieve the information for a given Gitlab branch
-   * @param branch The authenticated REST url
+   * Refreshes the repository (e.g. by invoking fetch to retrieve commits
+   * from a remote repository).
+   */
+  void refresh();
+
+  /**
+   * Retrieve the information for a given Git branch
+   * @param branch the subject branch
    */
   GitBranch retrieveGitBranch(String branch);
+
 }
