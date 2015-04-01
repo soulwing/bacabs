@@ -53,5 +53,5 @@ public interface Deployment {
    * Get the Gitlab branch associated with this deployment
    * @ return the gitlabBranch
    */
-  GitBranch getGitlabBranch();
+  GitBranch getGitBranch();
 }

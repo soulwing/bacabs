@@ -62,10 +62,10 @@
               {{deployment.jiraIssue.numTasks || 0}} Tasks
             </td>
             <td>
-             <span ng-if="deployment.gitlabBranch">
-              {{deployment.gitlabBranch.commitDate | date:'MM/dd/yyyy @ h:mma'}} by <em>{{deployment.gitlabBranch.committerName}}</em>
+             <span ng-if="deployment.gitBranch">
+              {{deployment.gitBranch.commitDate | date:'MM/dd/yyyy @ h:mma'}} by <em>{{deployment.gitBranch.committerName}}</em>
              </span>
-             <span ng-if="!deployment.gitlabBranch">
+             <span ng-if="!deployment.gitBranch">
                Merged to qa (or other branch)
              </span>
             </td>
