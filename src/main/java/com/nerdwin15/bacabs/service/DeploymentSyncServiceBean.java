@@ -65,6 +65,7 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
     for (Deployment deployment : deploymentRetriever.fetchDeployments()) {
       if (knownDeployments.contains(deployment)) {
         knownDeployments.remove(deployment);
+        deploymentService.addDeployment(deployment);
         continue;
       }
 
