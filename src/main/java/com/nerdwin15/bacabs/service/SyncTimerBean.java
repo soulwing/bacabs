@@ -40,7 +40,7 @@ public class SyncTimerBean {
   @Inject
   protected DeploymentSyncService syncService;
   
-  @Schedule(second="*/10", hour="*", minute="*", month="*", persistent=false)
+  @Schedule(second="*/30", hour="*", minute="*", month="*", persistent=false)
   public void doSync() {
     logger.info("Triggering a sync");
     try {
