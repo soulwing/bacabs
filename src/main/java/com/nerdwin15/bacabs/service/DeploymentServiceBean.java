@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import com.nerdwin15.bacabs.Deployment;
 import com.nerdwin15.bacabs.event.NewDeploymentEvent;
 import com.nerdwin15.bacabs.event.RemovedDeploymentEvent;
+import com.nerdwin15.bacabs.event.UpdatedDeploymentEvent;
 import com.nerdwin15.bacabs.repository.DeploymentRepository;
 
 /**
@@ -43,9 +44,12 @@ public class DeploymentServiceBean implements DeploymentService {
   
   @Inject
   protected Event<NewDeploymentEvent> newDeploymentEvent;
-  
+
   @Inject
   protected Event<RemovedDeploymentEvent> removedDeploymentEvent;
+
+  @Inject
+  protected Event<UpdatedDeploymentEvent> updatedDeploymentEvent;
   
   /**
    * {@inheritDoc}
@@ -63,7 +67,17 @@ public class DeploymentServiceBean implements DeploymentService {
     deploymentRepository.addDeployment(deployment);
     newDeploymentEvent.fire(new NewDeploymentEvent(deployment));
   }
-  
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void updateDeployment(Deployment deployment) {
+    deploymentRepository.removeDeployment(deployment);
+    deploymentRepository.addDeployment(deployment);
+    updatedDeploymentEvent.fire(new UpdatedDeploymentEvent(deployment));
+  }
+
   /**
    * {@inheritDoc}
    */

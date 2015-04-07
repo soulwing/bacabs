@@ -84,7 +84,7 @@ public class DeploymentSyncServiceBeanTest {
         will(returnValue(knownDeployments));
       oneOf(deploymentRetriever).fetchDeployments();
         will(returnValue(discoveredDeployments));
-      oneOf(deploymentService).addDeployment(knownDeployment2);
+      oneOf(deploymentService).updateDeployment(knownDeployment2);
       oneOf(deploymentService).addDeployment(newDeployment);
       oneOf(deploymentService).removeDeployment(knownDeployment1);
     } });

@@ -1,5 +1,5 @@
 /*
- * File created on Dec 5, 2014 
+ * File created on Dec 6, 2014 
  *
  * Copyright (c) 2014 Nerdwin15, LLC
  *
@@ -16,40 +16,30 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.bacabs.service;
-
-import java.util.Set;
+package com.nerdwin15.bacabs.event;
 
 import com.nerdwin15.bacabs.Deployment;
 
 /**
- * A service for interacting with {@link Deployment} objects.
+ * Event for new deployments
  *
  * @author Michael Irwin
  */
-public interface DeploymentService {
+public class UpdatedDeploymentEvent extends AbstractDeploymentEvent
+    implements ClientEvent {
 
-  /**
-   * Get all deployments in the system
-   * @return All deployments
-   */
-  Set<? extends Deployment> getDeployments();
+  private static final String TYPE = UpdatedDeploymentEvent.class.getSimpleName();
+
+  public UpdatedDeploymentEvent(Deployment deployment) {
+    super(deployment);
+  }
   
   /**
-   * Add a deployment
-   * @param deployment The deployment to add
+   * {@inheritDoc}
    */
-  void addDeployment(Deployment deployment);
-
-  /**
-   * Update a deployment
-   * @param deployment The deployment to update
-   */
-  void updateDeployment(Deployment deployment);
+  @Override
+  public String getType() {
+    return UpdatedDeploymentEvent.TYPE;
+  }
   
-  /**
-   * Remove a deployment
-   * @param deployment The deployment to remove
-   */
-  void removeDeployment(Deployment deployment);
 }
