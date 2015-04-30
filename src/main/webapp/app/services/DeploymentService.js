@@ -15,6 +15,16 @@
         });
       };
 
+      this.getDeployment = function(identifier) {
+        var deployments = CacheService.getImmediate("deployments");
+        if (deployments == null) return null;
+        for (var i = 0; i < deployments.length; i++) {
+          if (deployments[i].identifier == identifier)
+            return deployments[i];
+        }
+        return null;
+      };
+
       WebSocketService.registerListener("NewDeploymentEvent", function(event) {
         self.getDeployments().then(function(deployments) {
           deployments.push(event.deployment);

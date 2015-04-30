@@ -62,6 +62,10 @@
         return deferred.promise;
       };
       
+      this.getImmediate = function(key) {
+        return cache[key];
+      };
+
       var cache = {};
       
       var createCallback = function(key, deferred) {
