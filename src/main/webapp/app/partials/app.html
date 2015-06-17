@@ -44,6 +44,9 @@
             <th>
               Code Last Updated
             </th>
+            <th>
+              Discovery Time
+            </th>
           </tr>
           <tr ng-repeat="deployment in deployments | orderBy:'identifier':reverse" ng-class="{'strikethru' : deployment.jiraIssue.statusName == 'Closed'}">
             <td><a href="{{deployment.href}}">{{deployment.identifier}}</a></td>
@@ -68,6 +71,9 @@
              <span ng-if="!deployment.gitBranch">
                Merged to qa (or other branch)
              </span>
+            </td>
+            <td>
+              {{deployment.discoveryTime | date:'MM/dd/yyyy @ h:mma'}}
             </td>
           </tr>
         </table>
