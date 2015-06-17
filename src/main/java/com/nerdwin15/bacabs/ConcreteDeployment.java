@@ -18,6 +18,7 @@
  */
 package com.nerdwin15.bacabs;
 
+import java.util.Date;
 import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -47,6 +48,9 @@ public class ConcreteDeployment implements Deployment {
 
   @XmlElement
   private ConcreteGitBranch gitlabBranch;
+
+  @XmlElement
+  private Date discoveryTime = new Date();
   
   /**
    * {@inheritDoc}
@@ -119,7 +123,19 @@ public class ConcreteDeployment implements Deployment {
   public void setGitlabBranch(ConcreteGitBranch gitlabBranch) {
     this.gitlabBranch = gitlabBranch;
   }
-  
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Date getDiscoveryTime() {
+    return discoveryTime;
+  }
+
+  public void setDiscoveryTime(Date discoveryTime) {
+    this.discoveryTime = discoveryTime;
+  }
+
   /**
    * {@inheritDoc}
    */

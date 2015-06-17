@@ -18,6 +18,8 @@
  */
 package com.nerdwin15.bacabs;
 
+import java.util.Date;
+
 /**
  * Describes a deployment
  *
@@ -54,4 +56,10 @@ public interface Deployment {
    * @ return the gitlabBranch
    */
   GitBranch getGitBranch();
+
+  /**
+   * Get the time in which this deployment was discovered
+   * @return The discovery time
+   */
+  Date getDiscoveryTime();
 }
