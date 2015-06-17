@@ -116,7 +116,7 @@ public class ConcreteDeployment implements Deployment {
    * {@inheritDoc}
    */
   @Override
-  public GitBranch getGitBranch() {
+  public ConcreteGitBranch getGitBranch() {
     return gitlabBranch;
   }
 

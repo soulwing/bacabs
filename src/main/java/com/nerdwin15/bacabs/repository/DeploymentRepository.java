@@ -40,6 +40,14 @@ public interface DeploymentRepository {
    * @param deployment The deployment to add
    */
   void addDeployment(Deployment deployment);
+
+  /**
+   * Merge the provided deployment
+   * @param deployment The deployment to merge
+   * @return The updated deployment. Not guaranteed to be the same object
+   * as that passed in.
+   */
+  Deployment updateDeployment(Deployment deployment);
   
   /**
    * Remove a deployment

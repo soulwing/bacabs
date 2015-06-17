@@ -54,7 +54,28 @@ public class LocalDeploymentRepository implements DeploymentRepository {
     Validate.isTrue(deployment instanceof ConcreteDeployment);
     deployments.add((ConcreteDeployment) deployment);
   }
-  
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Deployment updateDeployment(Deployment deployment) {
+    Deployment existing = findDeployment(deployment);
+    if (existing == null) {
+      addDeployment(deployment);
+      return deployment;
+    }
+    ConcreteDeployment e = (ConcreteDeployment) existing;
+    ConcreteDeployment d = (ConcreteDeployment) deployment;
+
+    e.setGitlabBranch(d.getGitBranch());
+    e.setHref(d.getHref());
+    e.setIdentifier(d.getIdentifier());
+    e.setJiraIssue(d.getJiraIssue());
+    e.setSummary(d.getSummary());
+    return e;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -62,5 +83,12 @@ public class LocalDeploymentRepository implements DeploymentRepository {
   public void removeDeployment(Deployment deployment) {
     deployments.remove(deployment);
   }
-  
+
+  private Deployment findDeployment(Deployment deployment) {
+    for (Deployment d : deployments) {
+      if (d.equals(deployment))
+        return d;
+    }
+    return null;
+  }
 }

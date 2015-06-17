@@ -73,8 +73,7 @@ public class DeploymentServiceBean implements DeploymentService {
    */
   @Override
   public void updateDeployment(Deployment deployment) {
-    deploymentRepository.removeDeployment(deployment);
-    deploymentRepository.addDeployment(deployment);
+    deployment = deploymentRepository.updateDeployment(deployment);
     updatedDeploymentEvent.fire(new UpdatedDeploymentEvent(deployment));
   }
 
