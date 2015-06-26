@@ -7,6 +7,5 @@
      'bacabs.services.notificationService'
   ];
 
-  var services = angular.module('bacabs.services', otherServices);
-
+  angular.module('bacabs.services', otherServices);
 })();

@@ -1,9 +1,6 @@
 (function() {
 
-  var controllers = angular.module('bacabs.controllers',
-      ['bacabs.services', 'bacabs.directives']);
-
-  controllers.controller('appController', function($scope, deployments, NotificationService, WebSocketService) {
+  var AppController = function($scope, deployments, NotificationService, WebSocketService) {
     $scope.deployments = deployments;
     window.deployments = deployments;
     $scope.allowDesktopNotifications = NotificationService.isPermitted();
@@ -18,6 +15,8 @@
       NotificationService.stopNotifications();
       $scope.allowDesktopNotifications = false;
     };
-  });
+  };
 
+  angular.module('bacabs.controllers', ['bacabs.services', 'bacabs.directives'])
+      .controller('appController', AppController);
 })();

@@ -1,6 +1,5 @@
 (function() {
   
-  var directives = angular.module('bacabs.directives', ['bacabs.services']);
-  
-  
+  angular.module('bacabs.directives', ['bacabs.services']);
+
 })();
