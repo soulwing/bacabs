@@ -54,16 +54,9 @@ var source = {
     },
   },
   styles : {
-    theme: {
-      dir : SOURCE_BASE_DIR + "/less/theme",
-      files : [ SOURCE_BASE_DIR + '/less/theme/*.less' ],
-      watch : [ SOURCE_BASE_DIR + "/less/theme/*.less", SOURCE_BASE_DIR + "/less/variables.less" ]
-    },
-    custom: {
-      dir : "app/",
-      files : [ SOURCE_BASE_DIR + '/less/custom/*.less' ],
-      watch : [ SOURCE_BASE_DIR + '/less/custom/*.less', SOURCE_BASE_DIR + "/less/variables.less" ]
-    }
+    dir : "app/",
+    files : [ SOURCE_BASE_DIR + '/less/app.less' ],
+    watch : [ SOURCE_BASE_DIR + '/less/**/*.less', SOURCE_BASE_DIR + "/less/app.less" ]
   },
   templates : {
     files : [ SOURCE_BASE_DIR + '/app/**/*.html' ],
@@ -175,35 +168,18 @@ gulp.task('templates', function() {
   return templates.pipe(gulp.dest(build.templates.dir));
 });
 
-
 /**
- * Compiles theme LESS files. If running in prod mode, files are minified.
+ * Compiles LESS files. If running in prod mode, files are minified.
  */
-gulp.task('styles:theme', function() {
-  var styles = gulp.src(source.styles.theme.files)
-      .pipe(less({ paths : ["./" + BOWER_DIR ] }))
-      .on('error', console.error.bind(console))
-      .pipe(concat(build.styles.theme.name));
-
-  if (ENV == ENV_PROD)
-    styles.pipe(minifyCSS({keepSpecialComments : 1}));
-
-  return styles.pipe(gulp.dest(build.styles.dir));
-});
-
-
-/**
- * Compiles app LESS files. If running in prod mode, files are minified.
- */
-gulp.task('styles:custom', function() {
-  var styles = gulp.src(source.styles.custom.files)
+gulp.task('styles', function() {
+  var styles = gulp.src(source.styles.files)
       .pipe(sourcemaps.init())
-      .pipe(less({paths : [BOWER_DIR, source.styles.custom.dir]}));
+      .pipe(less({paths : [BOWER_DIR, source.styles.dir]}));
 
   if (ENV == ENV_PROD)
     styles = styles.pipe(minifyCSS({keepSpecialComments : 1}));
 
-  return styles.pipe(sourcemaps.write())
+  return styles.pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(build.styles.dir));
 });
 
@@ -220,7 +196,6 @@ gulp.task('app:index', function() {
 
   // Get the vendor script (which will need to go first) and stylesheets
   var otherSources = gulp.src([build.scripts.dir + "/vendor*.js",
-    build.styles.dir + "/" + build.styles.theme.name,
     build.styles.dir + "/*.css"], {read: false});
 
   var sources = merge(otherSources, appScriptSources);
@@ -246,8 +221,7 @@ gulp.task('watch', function() {
    */
   watch(source.scripts.app.watch,   function() { gulp.start('scripts:app'); gulp.start('app:index'); });
   watch(source.templates.watch,     function() { gulp.start('templates') });
-  watch(source.styles.theme.watch,  function() { gulp.start('styles:theme') });
-  watch(source.styles.custom.watch, function() { gulp.start('styles:custom') });
+  watch(source.styles.watch,        function() { gulp.start('styles') });
   watch(source.app.watch,           function() { gulp.start('app:index') });
   watch(source.index.file,          function() { gulp.start('app:index') });
   watch(source.test.watch,          function() {gulp.start('test');});
@@ -273,7 +247,6 @@ gulp.task('serve', function() {
       res.writeHead(503, {'Content-Type': 'text/plain'});
       res.end("Looks like the remote connection isn't established yet");
     } else {
-      console.error(err);
       res.writeHead(500, {'Content-Type': 'text/plain'});
       res.end("Something happened while trying to proxy");
     }
@@ -318,7 +291,7 @@ gulp.task('build', function(callback) {
   console.log("Build using environment: " + ENV);
   return runSequence('clean',
       'bowerInstall',
-      ['styles:theme', 'styles:custom', 'scripts:vendor', 'scripts:app', 'templates'],
+      ['styles', 'scripts:vendor', 'scripts:app', 'templates'],
       'app:index',
       'test',
       callback);
