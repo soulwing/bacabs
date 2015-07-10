@@ -16,11 +16,11 @@
       console.log("Websocket received a message: ", angular.copy(data));
 
       var topic = data.type;
-      for (var i = 0; i < topicListeners.length; i++) {
-        var topicInfo = topicListeners[i];
+      for (var topicKey in topicListeners) {
+        var topicInfo = topicListeners[topicKey];
         if (topic.search(topicInfo.regex) === 0) {
           for (var j = 0; j < topicInfo.listeners.length; j++) {
-            notifyListener(listeners[j], data);
+            notifyListener(topicInfo.listeners[j], data);
           }
         }
       }
@@ -42,7 +42,7 @@
       topicListeners[topic].listeners.push(callback);
     };
   };
-  
+
   angular.module('bacabs.services.webSocketService', [])
       .service('WebSocketService', WebSocketService);
 })();
