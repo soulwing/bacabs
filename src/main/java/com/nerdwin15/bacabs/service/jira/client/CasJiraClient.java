@@ -69,8 +69,7 @@ public class CasJiraClient extends AbstractJiraClient {
   private JiraIssue authenticate(Client client, String jiraRequestUrl) {
     Form form = new Form();
     form.param("username", username).param("password", password);
-System.out.println("(*&%(@*#%&@#(*%& CAS URL: " + casUrl);
-    System.out.println("*%&*#&%*@#&% CLIENT: " + client);
+
     Response response = client.target(casUrl)
         .request()
         .post(Entity.form(form));
