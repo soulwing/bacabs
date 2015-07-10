@@ -17,6 +17,6 @@
         });
   };
   
-  angular.module('bacabs', ['ui.router', 'bacabs.controllers', 'bacabs.services'])
+  angular.module('bacabs', ['ui.router', 'bacabs.controllers', 'bacabs.services', 'templates'])
       .config(stateConfig);
 })();

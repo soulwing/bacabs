@@ -1,0 +1,5 @@
+[
+  "target/gulp-webapp/bower_components/jquery/dist/jquery.js",
+  "target/gulp-webapp/bower_components/angular/angular.js",
+  "target/gulp-webapp/bower_components/angular-ui-router/release/angular-ui-router.js"
+]

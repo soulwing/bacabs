@@ -36,3 +36,6 @@ Thumbs.db
 .metadata
 
 npm-debug.log
+node
+node_modules
+bower_components
