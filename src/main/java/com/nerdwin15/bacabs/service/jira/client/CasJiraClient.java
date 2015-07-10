@@ -5,6 +5,7 @@ import com.nerdwin15.bacabs.JiraIssue;
 import org.apache.commons.lang.Validate;
 import org.soulwing.cdi.properties.Property;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;
@@ -37,7 +38,9 @@ public class CasJiraClient extends AbstractJiraClient {
   private String casUrl;
 
   @Override
+  @PostConstruct
   public void init() {
+    super.init();
     Validate.notEmpty(username, "jira username must be configured");
     Validate.notEmpty(password, "jira password must be configured");
     Validate.notEmpty(casUrl, "cas url must be configured");
@@ -66,7 +69,8 @@ public class CasJiraClient extends AbstractJiraClient {
   private JiraIssue authenticate(Client client, String jiraRequestUrl) {
     Form form = new Form();
     form.param("username", username).param("password", password);
-
+System.out.println("(*&%(@*#%&@#(*%& CAS URL: " + casUrl);
+    System.out.println("*%&*#&%*@#&% CLIENT: " + client);
     Response response = client.target(casUrl)
         .request()
         .post(Entity.form(form));
