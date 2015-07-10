@@ -18,35 +18,25 @@
  */
 package com.nerdwin15.bacabs.service;
 
-import static org.jboss.as.controller.client.helpers.ClientConstants.DEPLOYMENT;
-import static org.jboss.as.controller.client.helpers.ClientConstants.OP;
-import static org.jboss.as.controller.client.helpers.ClientConstants.OP_ADDR;
-import static org.jboss.as.controller.client.helpers.ClientConstants.READ_RESOURCE_OPERATION;
-import static org.jboss.as.controller.client.helpers.ClientConstants.RESULT;
-import static org.jboss.as.controller.client.helpers.ClientConstants.SUBSYSTEM;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.jboss.as.controller.client.ModelControllerClient;
-import org.jboss.dmr.ModelNode;
-import org.jboss.dmr.Property;
-
 import com.nerdwin15.bacabs.ConcreteDeployment;
 import com.nerdwin15.bacabs.ConcreteGitBranch;
 import com.nerdwin15.bacabs.ConcreteJiraIssue;
 import com.nerdwin15.bacabs.Deployment;
 import com.nerdwin15.bacabs.service.git.GitBranchRetrievalService;
-import com.nerdwin15.bacabs.service.jira.JiraIssueRetrievalService;
-import com.nerdwin15.bacabs.service.jira.JiraLoginService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nerdwin15.bacabs.service.jira.JiraIssueRetriever;
+import org.jboss.as.controller.client.ModelControllerClient;
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.jboss.as.controller.client.helpers.ClientConstants.*;
 
 /**
  * Defines a service that is used to sync the deployments by asking the JBoss
@@ -78,10 +68,7 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
   protected String jiraIdPattern;
 
   @Inject
-  private JiraLoginService casLoginService;
-
-  @Inject
-  JiraIssueRetrievalService jiraIssueRetrievalService;
+  private JiraIssueRetriever jiraIssueRetriever;
 
   @Inject
   GitBranchRetrievalService gitBranchRetrievalService;
@@ -152,10 +139,10 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
 
   private ConcreteJiraIssue getJiraIssue(String identifier) {
     try {
-      String url = casLoginService.getAuthenticatedRestUrl(identifier);
-      return (ConcreteJiraIssue) jiraIssueRetrievalService.retrieveJiraIssue(url);
-    } catch (IOException e) {
-      System.out.println("Unable to retrieve Jira Issue.  IO problem occurred.");
+      return (ConcreteJiraIssue) jiraIssueRetriever.getIssueDetails(identifier);
+    } catch (Exception e) {
+      System.out.println("Unable to retrieve Jira Issue.");
+      e.printStackTrace(System.err);
       return null;
     }
   }

@@ -35,7 +35,7 @@ import com.nerdwin15.bacabs.JiraIssue;
  */
 public class JiraIssueDeserializer extends JsonDeserializer<JiraIssue> {
 
-  private static final String USER_ACCEPTANCE_TEST = "User Acceptance Test";
+  private static final String USER_ACCEPTANCE_TEST = "user acceptance test";
 
   /**
    * {@inheritDoc}
@@ -51,13 +51,16 @@ public class JiraIssueDeserializer extends JsonDeserializer<JiraIssue> {
     String description = fieldsNode.get("description").asText();
     Integer statusId = fieldsNode.get("status").get("id").asInt();
     String statusName = fieldsNode.get("status").get("name").asText();
-    Integer numTasks = fieldsNode.path("subtasks").size();
-    Integer progressPercentage = fieldsNode.get("aggregateprogress").get("percent").asInt();
+    Integer numTasks = (fieldsNode.has("subtasks")) ? fieldsNode.path("subtasks").size() : 0;
+
+    Integer progressPercentage = 0;
+    if (fieldsNode.get("aggregateprogress").has("percent"))
+      progressPercentage = fieldsNode.get("aggregateprogress").get("percent").asInt();
     Integer acceptanceTaskStatusId = null;
     String acceptanceTaskStatusName = null;
     for (JsonNode node : fieldsNode.path("subtasks")) {
       String taskSummary = node.get("fields").get("summary").asText();
-      if (taskSummary.equals(USER_ACCEPTANCE_TEST)) {
+      if (taskSummary.toLowerCase().equals(USER_ACCEPTANCE_TEST)) {
         acceptanceTaskStatusId = node.get("fields").get("status").get("id").asInt();
         acceptanceTaskStatusName = node.get("fields").get("status").get("name").asText();
       }
