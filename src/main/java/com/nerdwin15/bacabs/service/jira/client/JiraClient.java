@@ -16,21 +16,22 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.bacabs.service.jira;
+package com.nerdwin15.bacabs.service.jira.client;
 
 import com.nerdwin15.bacabs.JiraIssue;
 
 /**
- * A service that is used to retrieve an issue from a Jira
- * REST endpoint.
+ * A definition for a client that can request JIRA details. It encapsulates
+ * the details around authentication.
  *
- * @author Chris Dunavant
+ * @author Michael Irwin
  */
-public interface JiraIssueRetrievalService {
+public interface JiraClient {
 
   /**
-   * Retrieve the information for a given Jira issue
-   * @param url The authenticated REST url
+   * Fetch the details for the JIRA issue found at the provided url
+   * @param url The url for the issue details
+   * @return The issue details
    */
-  JiraIssue retrieveJiraIssue(String url);
+  JiraIssue fetchDetails(String url);
 }

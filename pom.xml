@@ -101,8 +101,13 @@
     </dependency>
     <dependency>
       <groupId>org.soulwing</groupId>
-      <artifactId>cdi-property-injection</artifactId>
-      <version>1.0.6</version>
+      <artifactId>pinject-api</artifactId>
+      <version>1.0.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.soulwing</groupId>
+      <artifactId>pinject-extension</artifactId>
+      <version>1.0.11</version>
     </dependency>
     <dependency>
       <groupId>org.wildfly</groupId>
