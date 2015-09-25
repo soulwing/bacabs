@@ -2,6 +2,7 @@ package com.nerdwin15.bacabs.service.jira.client;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.nerdwin15.bacabs.JiraIssue;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.client.Client;
@@ -21,6 +22,7 @@ public abstract class AbstractJiraClient implements JiraClient {
   public void init() {
     client = ClientBuilder.newBuilder()
         .register(JacksonJaxbJsonProvider.class)
+        .register(new JaxRsSlf4jAdapter(LoggerFactory.getLogger(AbstractJiraClient.class)))
         .build();
     configureClient(client);
   }

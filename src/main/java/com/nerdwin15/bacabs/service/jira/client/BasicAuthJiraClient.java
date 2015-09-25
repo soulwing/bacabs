@@ -34,11 +34,13 @@ public class BasicAuthJiraClient extends AbstractJiraClient {
   @Property(name = "jira.auth.basic.password")
   protected String password;
 
+  private String authValue;
+
   @Override
-  public void init() {
+  protected void configureClient(Client client) {
     Validate.notEmpty(username, "jira username must be configured");
     Validate.notEmpty(password, "jira password must be configured");
-    client.register(new Authenticator(username, password));
+    authValue = getBasicAuthentication(username, password);
   }
 
   /**
@@ -49,31 +51,19 @@ public class BasicAuthJiraClient extends AbstractJiraClient {
     try {
       return client.target(url)
           .request(MediaType.APPLICATION_JSON)
+          .header("Authorization", authValue)
           .get(ConcreteJiraIssue.class);
     } catch (NotFoundException e) {
       return null;
     }
   }
 
-  private static class Authenticator implements ClientRequestFilter {
-    private final String authValue;
-
-    public Authenticator(String user, String password) {
-      this.authValue = getBasicAuthentication(user, password);
-    }
-
-    public void filter(ClientRequestContext requestContext) throws IOException {
-      MultivaluedMap<String, Object> headers = requestContext.getHeaders();
-      headers.add("Authorization", authValue);
-    }
-
-    private String getBasicAuthentication(String user, String password) {
-      String token = user + ":" + password;
-      try {
-        return "BASIC " + DatatypeConverter.printBase64Binary(token.getBytes("UTF-8"));
-      } catch (UnsupportedEncodingException ex) {
-        throw new IllegalStateException("Cannot encode with UTF-8", ex);
-      }
+  private String getBasicAuthentication(String user, String password) {
+    String token = user + ":" + password;
+    try {
+      return "Basic " + DatatypeConverter.printBase64Binary(token.getBytes("UTF-8"));
+    } catch (UnsupportedEncodingException ex) {
+      throw new IllegalStateException("Cannot encode with UTF-8", ex);
     }
   }
 

@@ -5,6 +5,7 @@ module.exports = function(config) {
       "target/gulp-webapp/app/js/vendor*.js",
       "target/gulp-webapp/app/js/templates*.js",
       "target/gulp-webapp/app/js/app*.js",
+      "target/gulp-webapp/bower_components/angular-mocks/angular-mocks.js",
       'src/main/ui/test/**/*.js'
     ],
     frameworks : ['jasmine'],

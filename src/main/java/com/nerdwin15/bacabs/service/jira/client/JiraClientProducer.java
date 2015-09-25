@@ -31,10 +31,10 @@ public class JiraClientProducer {
     switch (authType.toLowerCase()) {
       case "cas" :
         return casJiraClient.get();
-//      case "basic" :
-//        return basicAuthJiraClient.get();
+      case "basic" :
+        return basicAuthJiraClient.get();
       default :
-        throw new RuntimeException("Unable to setup client");
+        throw new RuntimeException("Unable to setup client - unknown auth type");
     }
   }
 }

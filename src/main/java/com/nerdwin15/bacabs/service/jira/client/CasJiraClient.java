@@ -3,6 +3,8 @@ package com.nerdwin15.bacabs.service.jira.client;
 import com.nerdwin15.bacabs.ConcreteJiraIssue;
 import com.nerdwin15.bacabs.JiraIssue;
 import org.apache.commons.lang.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.soulwing.cdi.properties.Property;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +24,8 @@ import javax.ws.rs.core.Response;
  */
 @ApplicationScoped
 public class CasJiraClient extends AbstractJiraClient {
+
+  private static final Logger logger = LoggerFactory.getLogger(CasJiraClient.class);
 
   private NewCookie sessionCookie;
 
@@ -51,6 +55,7 @@ public class CasJiraClient extends AbstractJiraClient {
    */
   @Override
   protected JiraIssue performFetch(Client client, String url) {
+    logger.info("Fetching JIRA data using URL: " + url);
     if (sessionCookie == null) {
       return authenticate(client, url);
     }
@@ -67,6 +72,7 @@ public class CasJiraClient extends AbstractJiraClient {
   }
 
   private JiraIssue authenticate(Client client, String jiraRequestUrl) {
+    logger.info("Authenticating JIRA client");
     Form form = new Form();
     form.param("username", username).param("password", password);
 

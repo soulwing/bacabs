@@ -293,7 +293,7 @@ gulp.task('build', function(callback) {
       'bowerInstall',
       ['styles', 'scripts:vendor', 'scripts:app', 'templates'],
       'app:index',
-      'test',
+      //'test',
       callback);
 });
 

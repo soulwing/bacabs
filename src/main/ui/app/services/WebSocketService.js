@@ -1,7 +1,7 @@
 (function() {
 
   var WebSocketService = function($timeout) {
-    var ws = new WebSocket("ws://" + window.location.host + CONTEXT_BASE + "/websocket");
+    var ws = new WebSocket("ws://" + window.location.host + "/websocket"); //CONTEXT_BASE + "/websocket");
 
     ws.onopen = function() {
       console.log("Websocket is opened");
