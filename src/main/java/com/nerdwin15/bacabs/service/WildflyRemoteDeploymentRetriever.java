@@ -63,16 +63,6 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
   @org.soulwing.cdi.properties.Property
   protected String hrefRoot;
 
-  @Inject
-  @org.soulwing.cdi.properties.Property
-  protected String jiraIdPattern;
-
-  @Inject
-  private JiraIssueRetriever jiraIssueRetriever;
-
-  @Inject
-  GitBranchRetrievalService gitBranchRetrievalService;
-
   protected ModelControllerClient wildflyClient;
 
   @PostConstruct
@@ -96,7 +86,6 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
     request.get(OP_ADDR).add(DEPLOYMENT);
 
     ModelNode returnVal = wildflyClient.execute(request);
-    gitBranchRetrievalService.refresh();
 
     for (Property property : returnVal.get(RESULT).get(DEPLOYMENT).asPropertyList()) {
       String href = getHref(property.getName());
@@ -105,20 +94,9 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
 
       String identifier = href.substring(1);
 
-      ConcreteJiraIssue issue = null;
-      ConcreteGitBranch branch = null;
-      if (identifier != null
-          && !identifier.isEmpty()
-          && identifier.contains(jiraIdPattern)) {
-        issue = getJiraIssue(identifier);
-        branch = getGitlabBranch(identifier);
-      }
-
       ConcreteDeployment deployment = new ConcreteDeployment();
       deployment.setHref(hrefRoot + href);
       deployment.setIdentifier(identifier);
-      deployment.setJiraIssue(issue);
-      deployment.setGitlabBranch(branch);
       deployments.add(deployment);
     }
 
@@ -137,17 +115,4 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
     return null;
   }
 
-  private ConcreteJiraIssue getJiraIssue(String identifier) {
-    try {
-      return (ConcreteJiraIssue) jiraIssueRetriever.getIssueDetails(identifier);
-    } catch (Exception e) {
-      System.out.println("Unable to retrieve Jira Issue.");
-      e.printStackTrace(System.err);
-      return null;
-    }
-  }
-
-  private ConcreteGitBranch getGitlabBranch(String identifier) {
-    return (ConcreteGitBranch) gitBranchRetrievalService.retrieveGitBranch(identifier);
-  }
 }

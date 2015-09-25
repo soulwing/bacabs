@@ -68,7 +68,7 @@ public class LocalDeploymentRepository implements DeploymentRepository {
     ConcreteDeployment e = (ConcreteDeployment) existing;
     ConcreteDeployment d = (ConcreteDeployment) deployment;
 
-    e.setGitlabBranch(d.getGitBranch());
+    e.setGitBranch(d.getGitBranch());
     e.setHref(d.getHref());
     e.setIdentifier(d.getIdentifier());
     e.setJiraIssue(d.getJiraIssue());

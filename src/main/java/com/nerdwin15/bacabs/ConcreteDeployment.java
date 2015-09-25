@@ -18,6 +18,8 @@
  */
 package com.nerdwin15.bacabs;
 
+import org.apache.commons.lang.Validate;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -47,14 +49,11 @@ public class ConcreteDeployment implements Deployment {
   private ConcreteJiraIssue jiraIssue;
 
   @XmlElement
-  private ConcreteGitBranch gitlabBranch;
+  private ConcreteGitBranch gitBranch;
 
   @XmlElement
   private Date discoveryTime = new Date();
   
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String getIdentifier() {
     return identifier;
@@ -68,9 +67,6 @@ public class ConcreteDeployment implements Deployment {
     this.identifier = identifier;
   }
   
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String getHref() {
     return href;
@@ -84,9 +80,6 @@ public class ConcreteDeployment implements Deployment {
     this.href = href;
   }
   
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String getSummary() {
     return summary;
@@ -100,33 +93,36 @@ public class ConcreteDeployment implements Deployment {
     this.summary = summary;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public ConcreteJiraIssue getJiraIssue() {
     return jiraIssue;
   }
-  
-  public void setJiraIssue(ConcreteJiraIssue jiraIssue) {
-    this.jiraIssue = jiraIssue;
+
+  @Override
+  public void setJiraIssue(JiraIssue jiraIssue) {
+    if (jiraIssue == null) {
+      this.jiraIssue = null;
+      return;
+    }
+    Validate.isTrue(jiraIssue instanceof ConcreteJiraIssue);
+    this.jiraIssue = (ConcreteJiraIssue) jiraIssue;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public ConcreteGitBranch getGitBranch() {
-    return gitlabBranch;
+    return gitBranch;
   }
 
-  public void setGitlabBranch(ConcreteGitBranch gitlabBranch) {
-    this.gitlabBranch = gitlabBranch;
+  @Override
+  public void setGitBranch(GitBranch gitBranch) {
+    if (gitBranch == null) {
+      this.gitBranch = null;
+      return;
+    }
+    Validate.isTrue(gitBranch instanceof ConcreteGitBranch);
+    this.gitBranch = (ConcreteGitBranch) gitBranch;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public Date getDiscoveryTime() {
     return discoveryTime;
@@ -136,17 +132,11 @@ public class ConcreteDeployment implements Deployment {
     this.discoveryTime = discoveryTime;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int hashCode() {
     return Objects.hash(identifier);
   }
   
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
@@ -156,9 +146,6 @@ public class ConcreteDeployment implements Deployment {
     return this.identifier.equals(that.getIdentifier());
   }
   
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String toString() {
     return String.format(TO_STRING_FORMAT, identifier, href, summary);

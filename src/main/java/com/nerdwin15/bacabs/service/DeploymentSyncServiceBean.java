@@ -25,6 +25,9 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import com.nerdwin15.bacabs.service.git.GitBranchRetrievalService;
+import com.nerdwin15.bacabs.service.jira.JiraIssueRetriever;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soulwing.cdi.properties.Property;
@@ -47,6 +50,16 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
   @Inject
   protected DeploymentService deploymentService;
 
+  @Inject
+  @org.soulwing.cdi.properties.Property
+  protected String jiraIdPattern;
+
+  @Inject
+  protected JiraIssueRetriever jiraIssueRetriever;
+
+  @Inject
+  protected GitBranchRetrievalService gitBranchRetrievalService;
+
   @Inject @Property
   protected String identifierPattern;
 
@@ -62,15 +75,22 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
   public void performDeploymentSync() throws IOException {
     Set<? extends Deployment> knownDeployments = deploymentService.getDeployments();
 
+    gitBranchRetrievalService.refresh();
     for (Deployment deployment : deploymentRetriever.fetchDeployments()) {
+      if (!deployment.getIdentifier().matches(identifierPattern))
+        continue;
+
+      String identifier = deployment.getIdentifier();
+      if (StringUtils.isNotEmpty(identifier)) {
+        deployment.setJiraIssue(jiraIssueRetriever.getIssueDetails(identifier));
+        deployment.setGitBranch(gitBranchRetrievalService.retrieveGitBranch(identifier));
+      }
+
       if (knownDeployments.contains(deployment)) {
         knownDeployments.remove(deployment);
         deploymentService.updateDeployment(deployment);
         continue;
       }
-
-      if (!deployment.getIdentifier().matches(identifierPattern))
-        continue;
 
       deploymentService.addDeployment(deployment);
       logger.info("Discovered new deployment: " + deployment);

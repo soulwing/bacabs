@@ -50,12 +50,23 @@ public interface Deployment {
    * @ return the jiraIssue
    */
   JiraIssue getJiraIssue();
+
+  /**
+   * Set the JIRA issue for a deployment.
+   */
+  void setJiraIssue(JiraIssue jiraIssue);
   
   /**
-   * Get the Gitlab branch associated with this deployment
-   * @ return the gitlabBranch
+   * Get the git branch associated with this deployment
+   * @ return the git branch information
    */
   GitBranch getGitBranch();
+
+  /**
+   * Set the git branch information for the deployment
+   * @param gitBranch
+   */
+  void setGitBranch(GitBranch gitBranch);
 
   /**
    * Get the time in which this deployment was discovered
