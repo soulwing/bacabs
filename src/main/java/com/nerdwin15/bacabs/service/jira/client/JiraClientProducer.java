@@ -16,7 +16,7 @@ import javax.inject.Inject;
 public class JiraClientProducer {
 
   @Inject
-  @Property(name = "jira.auth.type")
+  @Property
   protected String authType;
 
   @Inject

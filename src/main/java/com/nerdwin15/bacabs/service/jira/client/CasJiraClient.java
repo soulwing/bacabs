@@ -30,15 +30,15 @@ public class CasJiraClient extends AbstractJiraClient {
   private NewCookie sessionCookie;
 
   @Inject
-  @Property(name = "jira.auth.cas.username")
+  @Property
   private String username;
 
   @Inject
-  @Property(name = "jira.auth.cas.password")
+  @Property
   private String password;
 
   @Inject
-  @Property(name = "jira.auth.cas.url")
+  @Property
   private String casUrl;
 
   @Override

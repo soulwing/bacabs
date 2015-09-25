@@ -27,11 +27,11 @@ import java.io.UnsupportedEncodingException;
 public class BasicAuthJiraClient extends AbstractJiraClient {
 
   @Inject
-  @Property(name = "jira.auth.basic.username")
+  @Property
   protected String username;
 
   @Inject
-  @Property(name = "jira.auth.basic.password")
+  @Property
   protected String password;
 
   private String authValue;

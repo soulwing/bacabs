@@ -19,7 +19,7 @@ import javax.inject.Inject;
 public class JiraIssueRetrieverBean implements JiraIssueRetriever {
 
   @Inject
-  @Property(name = "jira.issueBaseUrl")
+  @Property
   protected String jiraIssueBase;
 
   @Inject @ChosenClient

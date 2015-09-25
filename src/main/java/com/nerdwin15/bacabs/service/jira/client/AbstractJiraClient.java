@@ -5,6 +5,7 @@ import com.nerdwin15.bacabs.JiraIssue;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
@@ -40,7 +41,11 @@ public abstract class AbstractJiraClient implements JiraClient {
    */
   @Override
   public JiraIssue fetchDetails(String url) {
-    return performFetch(client, url);
+    try {
+      return performFetch(client, url);
+    } catch (ProcessingException e) {
+      return null;
+    }
   }
 
   /**
