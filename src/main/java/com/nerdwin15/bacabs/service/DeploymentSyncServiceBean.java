@@ -51,10 +51,6 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
   protected DeploymentService deploymentService;
 
   @Inject
-  @org.soulwing.cdi.properties.Property
-  protected String jiraIdPattern;
-
-  @Inject
   protected JiraIssueRetriever jiraIssueRetriever;
 
   @Inject

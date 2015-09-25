@@ -22,6 +22,10 @@ public class JiraIssueRetrieverBean implements JiraIssueRetriever {
   @Property
   protected String jiraIssueBase;
 
+  @Inject
+  @Property
+  protected String jiraIdPattern;
+
   @Inject @ChosenClient
   protected JiraClient jiraClient;
 
@@ -30,6 +34,8 @@ public class JiraIssueRetrieverBean implements JiraIssueRetriever {
    */
   @Override
   public JiraIssue getIssueDetails(String identifier) {
+    if (!identifier.contains(jiraIdPattern))
+      return null;
     String url = jiraIssueBase + identifier;
     return jiraClient.fetchDetails(url);
   }
