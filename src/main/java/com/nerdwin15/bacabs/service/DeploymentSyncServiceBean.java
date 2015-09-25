@@ -73,14 +73,12 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
 
     gitBranchRetrievalService.refresh();
     for (Deployment deployment : deploymentRetriever.fetchDeployments()) {
-      if (!deployment.getIdentifier().matches(identifierPattern))
+      String identifier = deployment.getIdentifier();
+      if (!identifier.matches(identifierPattern))
         continue;
 
-      String identifier = deployment.getIdentifier();
-      if (StringUtils.isNotEmpty(identifier)) {
-        deployment.setJiraIssue(jiraIssueRetriever.getIssueDetails(identifier));
-        deployment.setGitBranch(gitBranchRetrievalService.retrieveGitBranch(identifier));
-      }
+      deployment.setJiraIssue(jiraIssueRetriever.getIssueDetails(identifier));
+      deployment.setGitBranch(gitBranchRetrievalService.retrieveGitBranch(identifier));
 
       if (knownDeployments.contains(deployment)) {
         knownDeployments.remove(deployment);

@@ -21,6 +21,10 @@ package com.nerdwin15.bacabs.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.nerdwin15.bacabs.GitBranch;
+import com.nerdwin15.bacabs.JiraIssue;
+import com.nerdwin15.bacabs.service.git.GitBranchRetrievalService;
+import com.nerdwin15.bacabs.service.jira.JiraIssueRetriever;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -49,11 +53,20 @@ public class DeploymentSyncServiceBeanTest {
   
   @Mock DeploymentService deploymentService;
   @Mock RemoteDeploymentRetriever deploymentRetriever;
+  @Mock JiraIssueRetriever jiraIssueRetriever;
+  @Mock GitBranchRetrievalService gitBranchRetrievalService;
 
-  private Deployment knownDeployment1 = createDeployment(KNOWN_ID_1);
-  private Deployment knownDeployment2 = createDeployment(KNOWN_ID_2);
-  private Deployment newDeployment = createDeployment(NEW_ID_1);
-  private Deployment badNewDeployment = createDeployment(BAD_NEW_ID);
+  @Mock JiraIssue jiraIssue1;
+  @Mock JiraIssue jiraIssue2;
+  @Mock JiraIssue jiraIssue3;
+  @Mock GitBranch gitBranch1;
+  @Mock GitBranch gitBranch2;
+  @Mock GitBranch gitBranch3;
+
+  @Mock Deployment knownDeployment1;
+  @Mock Deployment knownDeployment2;
+  @Mock Deployment newDeployment;
+  @Mock Deployment badNewDeployment;
   
   private Set<Deployment> discoveredDeployments = new HashSet<>();
   private Set<Deployment> knownDeployments = new HashSet<>();
@@ -68,7 +81,10 @@ public class DeploymentSyncServiceBeanTest {
     service.deploymentRetriever = deploymentRetriever;
     service.deploymentService = deploymentService;
     service.identifierPattern = MATCH_PATTERN;
-    
+    service.jiraIssueRetriever = jiraIssueRetriever;
+    service.gitBranchRetrievalService = gitBranchRetrievalService;
+
+    setDeploymentExpectations();
     knownDeployments.add(knownDeployment1);
     knownDeployments.add(knownDeployment2);
     
@@ -79,24 +95,58 @@ public class DeploymentSyncServiceBeanTest {
   
   @Test
   public void testSync() throws Exception {
-    context.checking(new Expectations() { {
-      oneOf(deploymentService).getDeployments();
+    setJiraIssueRetrieverExpectations();
+    setGitBranchRetrieverExpectations();
+
+    context.checking(new Expectations() {
+      {
+        oneOf(deploymentService).getDeployments();
         will(returnValue(knownDeployments));
-      oneOf(deploymentRetriever).fetchDeployments();
+        oneOf(deploymentRetriever).fetchDeployments();
         will(returnValue(discoveredDeployments));
-      oneOf(deploymentService).updateDeployment(knownDeployment2);
-      oneOf(deploymentService).addDeployment(newDeployment);
-      oneOf(deploymentService).removeDeployment(knownDeployment1);
-    } });
+        oneOf(deploymentService).updateDeployment(knownDeployment2);
+        oneOf(deploymentService).addDeployment(newDeployment);
+        oneOf(deploymentService).removeDeployment(knownDeployment1);
+      }
+    });
     
     service.performDeploymentSync();
   }
   
   
-  private static ConcreteDeployment createDeployment(String identifier) {
-    ConcreteDeployment deployment = new ConcreteDeployment();
-    deployment.setIdentifier(identifier);
-    return deployment;
+  private void setDeploymentExpectations() {
+    context.checking(new Expectations() { {
+      oneOf(knownDeployment2).getIdentifier();
+      will(returnValue(KNOWN_ID_2));
+      oneOf(knownDeployment2).setJiraIssue(jiraIssue2);
+      oneOf(knownDeployment2).setGitBranch(gitBranch2);
+
+      oneOf(newDeployment).getIdentifier();
+      will(returnValue(NEW_ID_1));
+      oneOf(newDeployment).setJiraIssue(jiraIssue3);
+      oneOf(newDeployment).setGitBranch(gitBranch3);
+
+      oneOf(badNewDeployment).getIdentifier();
+        will(returnValue(BAD_NEW_ID));
+    } });
   }
 
+  private void setJiraIssueRetrieverExpectations() {
+    context.checking(new Expectations() { {
+      oneOf(jiraIssueRetriever).getIssueDetails(KNOWN_ID_2);
+        will(returnValue(jiraIssue2));
+      oneOf(jiraIssueRetriever).getIssueDetails(NEW_ID_1);
+        will(returnValue(jiraIssue3));
+    } });
+  }
+
+  private void setGitBranchRetrieverExpectations() {
+    context.checking(new Expectations() { {
+      oneOf(gitBranchRetrievalService).refresh();
+      oneOf(gitBranchRetrievalService).retrieveGitBranch(KNOWN_ID_2);
+        will(returnValue(gitBranch2));
+      oneOf(gitBranchRetrievalService).retrieveGitBranch(NEW_ID_1);
+        will(returnValue(gitBranch3));
+    } });
+  }
 }
