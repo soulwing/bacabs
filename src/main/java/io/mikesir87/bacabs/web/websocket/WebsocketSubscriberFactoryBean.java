@@ -18,12 +18,12 @@
  */
 package io.mikesir87.bacabs.web.websocket;
 
+import io.mikesir87.bacabs.event.topic.Subscriber;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.websocket.Session;
-
-import io.mikesir87.bacabs.event.topic.Subscriber;
 
 /**
  * A CDI-injectable {@link WebsocketSubscriberFactory}.
@@ -31,20 +31,15 @@ import io.mikesir87.bacabs.event.topic.Subscriber;
  * @author Michael Irwin
  */
 @ApplicationScoped
-public class WebsocketSubscriberFactoryBean 
+public class WebsocketSubscriberFactoryBean
     implements WebsocketSubscriberFactory {
 
-  @Inject
-  protected Instance<WebsocketSubscriber> subscriberHolder;
-  
   /**
    * {@inheritDoc}
    */
   @Override
   public Subscriber createSubscriber(Session session) {
-    WebsocketSubscriber subscriber = subscriberHolder.get();
-    subscriber.setSession(session);
-    return subscriber;
+    return new WebsocketSubscriber(session);
   }
   
 }

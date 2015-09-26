@@ -34,12 +34,15 @@ import io.mikesir87.bacabs.event.topic.SubscriberDisconnectedException;
  * @author Michael Irwin
  * @author Chris Dunavant
  */
-@Dependent
 public class WebsocketSubscriber implements Subscriber {
 
   private ObjectMapper objectMapper = new ObjectMapper();
   
   private Session session;
+
+  public WebsocketSubscriber(Session session) {
+    this.session = session;
+  }
   
   /**
    * {@inheritDoc}

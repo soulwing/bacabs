@@ -18,9 +18,9 @@
  */
 package io.mikesir87.bacabs.web.websocket;
 
-import javax.websocket.Session;
-
 import io.mikesir87.bacabs.event.topic.Subscriber;
+
+import javax.websocket.Session;
 
 /**
  * Defines a factory that creates {@link Subscriber} objects
