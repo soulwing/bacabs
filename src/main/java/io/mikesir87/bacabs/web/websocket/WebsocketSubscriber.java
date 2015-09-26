@@ -38,7 +38,7 @@ public class WebsocketSubscriber implements Subscriber {
 
   private ObjectMapper objectMapper = new ObjectMapper();
   
-  private Session session;
+  protected Session session;
 
   public WebsocketSubscriber(Session session) {
     this.session = session;
@@ -62,21 +62,8 @@ public class WebsocketSubscriber implements Subscriber {
       throw new SubscriberDisconnectedException();
     }
   }
-  
-  /**
-   * Gets the {@code websocketSession} property.
-   * @return property value
-   */
+
   public Session getSession() {
     return session;
   }
-
-  /**
-   * Sets the {@code websocketSession} property.
-   * @param websocketSession the value to set
-   */
-  public void setSession(Session websocketSession) {
-    this.session = websocketSession;
-  }
-
 }
