@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.jmock.Expectations.same;
 
 /**
@@ -19,6 +20,7 @@ import static org.jmock.Expectations.same;
 public class JiraIssueRetrieverBeanTest {
 
   private static final String ISSUE_BASE = "http://jira.example.com/";
+  private static final String JIRA_ID_PATTERN = "test-";
 
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -32,11 +34,12 @@ public class JiraIssueRetrieverBeanTest {
   public void setup() {
     bean.jiraClient = jiraClient;
     bean.jiraIssueBase = ISSUE_BASE;
+    bean.jiraIdPattern = JIRA_ID_PATTERN;
   }
 
   @Test
   public void testGetIssueDetails() {
-    String identifier = "some-identifier";
+    String identifier = "test-identifier";
     final String url = ISSUE_BASE + identifier;
     final JiraIssue issue = context.mock(JiraIssue.class);
     context.checking(new Expectations() { {
@@ -45,6 +48,12 @@ public class JiraIssueRetrieverBeanTest {
     } });
 
     assertThat(bean.getIssueDetails(identifier), is(same(issue)));
+  }
+
+  @Test
+  public void testGetIssueDetailsForNoncaringIdentifier() {
+    String identifier = "some-other-identifier";
+    assertThat(bean.getIssueDetails(identifier), is(nullValue()));
   }
 
 }
