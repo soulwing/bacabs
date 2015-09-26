@@ -19,21 +19,27 @@
 package com.nerdwin15.bacabs;
 
 /**
- * Describes a Git Branch.
+ * Provides metadata about a specific branch.
  *
- * @author Christopher M. Dunavant
+ * @author Michael Irwin
  */
 public interface GitBranch {
 
   /**
-   * Get the name of the committer for the branch
-   * @return name
+   * Get the name of the branch
+   * @return The name of the branch
    */
-  String getCommitterName();
+  String getName();
+
+  /**
+   * Get the name of the committer for the branch
+   * @return
+   */
+  String getLastCommitAuthor();
   
   /**
    * Get the date of the last commit for the branch
    * @return date
    */
-  String getCommitDate();
+  String getLastCommitDate();
 }

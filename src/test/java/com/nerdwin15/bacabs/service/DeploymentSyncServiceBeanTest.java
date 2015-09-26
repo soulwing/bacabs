@@ -18,9 +18,7 @@
  */
 package com.nerdwin15.bacabs.service;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import com.nerdwin15.bacabs.Deployment;
 import com.nerdwin15.bacabs.GitBranch;
 import com.nerdwin15.bacabs.JiraIssue;
 import com.nerdwin15.bacabs.service.git.GitBranchRetrievalService;
@@ -32,8 +30,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.nerdwin15.bacabs.ConcreteDeployment;
-import com.nerdwin15.bacabs.Deployment;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Test case for the {@link DeploymentSyncServiceBean}.

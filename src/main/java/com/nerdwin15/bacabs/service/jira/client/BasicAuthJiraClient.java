@@ -1,6 +1,6 @@
 package com.nerdwin15.bacabs.service.jira.client;
 
-import com.nerdwin15.bacabs.ConcreteJiraIssue;
+import com.nerdwin15.bacabs.domain.ConcreteJiraIssue;
 import com.nerdwin15.bacabs.JiraIssue;
 import org.apache.commons.lang.Validate;
 import org.soulwing.cdi.properties.Property;
@@ -9,12 +9,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -47,15 +44,11 @@ public class BasicAuthJiraClient extends AbstractJiraClient {
    * {@inheritDoc}
    */
   @Override
-  protected JiraIssue performFetch(Client client, String url) {
-    try {
-      return client.target(url)
-          .request(MediaType.APPLICATION_JSON)
-          .header("Authorization", authValue)
-          .get(ConcreteJiraIssue.class);
-    } catch (NotFoundException e) {
-      return null;
-    }
+  protected Response performFetch(Client client, String url) {
+    return client.target(url)
+        .request(MediaType.APPLICATION_JSON)
+        .header("Authorization", authValue)
+        .get();
   }
 
   private String getBasicAuthentication(String user, String password) {

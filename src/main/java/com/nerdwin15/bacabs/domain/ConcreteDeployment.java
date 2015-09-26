@@ -16,15 +16,17 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.bacabs;
+package com.nerdwin15.bacabs.domain;
 
+import com.nerdwin15.bacabs.Deployment;
+import com.nerdwin15.bacabs.GitBranch;
+import com.nerdwin15.bacabs.JiraIssue;
 import org.apache.commons.lang.Validate;
-
-import java.util.Date;
-import java.util.Objects;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * An implementation of the {@link Deployment} object

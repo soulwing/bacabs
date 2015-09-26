@@ -2,12 +2,15 @@ package com.nerdwin15.bacabs.service.jira.client;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.nerdwin15.bacabs.JiraIssue;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
 
 /**
  * An abstract implementation of the {@link JiraClient} that builds a JAXRS
@@ -17,7 +20,13 @@ import javax.ws.rs.client.ClientBuilder;
  */
 public abstract class AbstractJiraClient implements JiraClient {
 
+  private static final Logger logger =
+      LoggerFactory.getLogger(AbstractJiraClient.class);
+
   protected Client client;
+
+  @Inject
+  protected ResponseHandler responseHandler;
 
   @PostConstruct
   public void init() {
@@ -42,8 +51,14 @@ public abstract class AbstractJiraClient implements JiraClient {
   @Override
   public JiraIssue fetchDetails(String url) {
     try {
-      return performFetch(client, url);
+      Response response = performFetch(client, url);
+      try {
+        return responseHandler.convertResponseToIssue(response);
+      } finally {
+        response.close();
+      }
     } catch (ProcessingException e) {
+      logger.error("Processing error:", e);
       return null;
     }
   }
@@ -52,7 +67,7 @@ public abstract class AbstractJiraClient implements JiraClient {
    * Perform the actual fetch
    * @param client The client to use for fetching
    * @param url The url to fetch
-   * @return The JIRA issue details
+   * @return The response from doing the fetch
    */
-  protected abstract JiraIssue performFetch(Client client, String url);
+  protected abstract Response performFetch(Client client, String url);
 }

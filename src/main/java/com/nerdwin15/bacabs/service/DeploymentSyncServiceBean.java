@@ -18,21 +18,18 @@
  */
 package com.nerdwin15.bacabs.service;
 
-import java.io.IOException;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
+import com.nerdwin15.bacabs.Deployment;
 import com.nerdwin15.bacabs.service.git.GitBranchRetrievalService;
 import com.nerdwin15.bacabs.service.jira.JiraIssueRetriever;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soulwing.cdi.properties.Property;
 
-import com.nerdwin15.bacabs.Deployment;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.Set;
 
 /**
  * Straight-forward implementation of the {@link DeploymentSyncService}.

@@ -25,7 +25,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.apache.commons.lang.Validate;
 
-import com.nerdwin15.bacabs.ConcreteDeployment;
+import com.nerdwin15.bacabs.domain.ConcreteDeployment;
 import com.nerdwin15.bacabs.Deployment;
 
 /**

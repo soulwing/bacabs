@@ -18,10 +18,10 @@
  */
 package com.nerdwin15.bacabs.service;
 
+import com.nerdwin15.bacabs.Deployment;
+
 import java.io.IOException;
 import java.util.Set;
-
-import com.nerdwin15.bacabs.Deployment;
 
 /**
  * Defines a service that is used to sync the deployments by asking the JBoss

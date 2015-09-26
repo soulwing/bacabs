@@ -18,9 +18,9 @@
  */
 package com.nerdwin15.bacabs.service;
 
-import java.util.Set;
-
 import com.nerdwin15.bacabs.Deployment;
+
+import java.util.Set;
 
 /**
  * A service for interacting with {@link Deployment} objects.

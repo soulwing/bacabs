@@ -48,7 +48,7 @@
               Discovery Time
             </th>
           </tr>
-          <tr ng-repeat="deployment in deployments | orderBy:'identifier':reverse" ng-class="{'strikethru' : deployment.jiraIssue.statusName == 'Closed'}">
+          <tr ng-repeat="deployment in deployments | orderBy:'identifier':reverse" ng-class="{'strikethru' : deployment.jiraIssue.status == 'Closed'}">
             <td><a href="{{deployment.href}}">{{deployment.identifier}}</a></td>
             <td>
               {{deployment.jiraIssue.summary}}
@@ -57,16 +57,16 @@
               {{deployment.jiraIssue.description}}
             </td>
             <td>
-              <span ng-if="deployment.jiraIssue.acceptanceTaskStatusName">{{deployment.jiraIssue.acceptanceTaskStatusName}}</span>
-              <span ng-if="!deployment.jiraIssue.acceptanceTaskStatusName"><em>No Acceptance Test</em></span>
+              <span ng-if="deployment.jiraIssue.acceptanceTaskStatus">{{deployment.jiraIssue.acceptanceTaskStatus}}</span>
+              <span ng-if="!deployment.jiraIssue.acceptanceTaskStatus"><em>No Acceptance Test</em></span>
             </td>
             <td>
-              {{deployment.jiraIssue.progressPercentage || 0}}% in
-              {{deployment.jiraIssue.numTasks || 0}} Tasks
+              {{deployment.jiraIssue.percentCompleted || 0}}% in
+              {{deployment.jiraIssue.subtaskCount || 0}} Tasks
             </td>
             <td>
              <span ng-if="deployment.gitBranch">
-              {{deployment.gitBranch.commitDate | date:'MM/dd/yyyy @ h:mma'}} by <em>{{deployment.gitBranch.committerName}}</em>
+              {{deployment.gitBranch.lastCommitDate | date:'MM/dd/yyyy @ h:mma'}} by <em>{{deployment.gitBranch.lastCommitAuthor}}</em>
              </span>
              <span ng-if="!deployment.gitBranch">
                Merged to qa (or other branch)

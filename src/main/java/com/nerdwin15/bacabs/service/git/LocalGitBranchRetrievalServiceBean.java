@@ -28,7 +28,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.nerdwin15.bacabs.ConcreteGitBranch;
+import com.nerdwin15.bacabs.GitBranchBuilder;
+import com.nerdwin15.bacabs.domain.ConcreteGitBranch;
 import com.nerdwin15.bacabs.GitBranch;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
@@ -72,6 +73,9 @@ public class LocalGitBranchRetrievalServiceBean
   @Inject @Property
   protected URL privateKeyLocation;
 
+  @Inject
+  protected GitBranchBuilder gitBranchBuilder;
+
   private File directory;
 
   @PostConstruct
@@ -112,7 +116,7 @@ public class LocalGitBranchRetrievalServiceBean
           .call();
       for (Ref ref : branches) {
         if (refName.equals(ref.getName())) {
-          return newGitBranch(git, ref);
+          return newGitBranch(git, ref, branch);
         }
       }
       return null;
@@ -122,7 +126,7 @@ public class LocalGitBranchRetrievalServiceBean
     }
   }
 
-  private GitBranch newGitBranch(Git git, Ref ref)
+  private GitBranch newGitBranch(Git git, Ref ref, String branch)
       throws GitAPIException, IOException {
     Iterator<RevCommit> commits = git.log()
         .setMaxCount(1)
@@ -131,10 +135,12 @@ public class LocalGitBranchRetrievalServiceBean
     if (!commits.hasNext()) return null;
     RevCommit commit = commits.next();
     PersonIdent authorIdent = commit.getAuthorIdent();
-    ConcreteGitBranch gitBranch = new ConcreteGitBranch();
-    gitBranch.setCommitterName(authorIdent.getName());
-    gitBranch.setCommitDate(authorIdent.getWhen().toString());
-    return gitBranch;
+
+    return gitBranchBuilder
+        .lastCommitAuthor(authorIdent.getName())
+        .lastCommitDate(authorIdent.getWhen().toString())
+        .name(branch)
+        .build();
   }
 
   private Git newGit(File directory) throws IOException {

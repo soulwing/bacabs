@@ -18,12 +18,8 @@
  */
 package com.nerdwin15.bacabs.service;
 
-import com.nerdwin15.bacabs.ConcreteDeployment;
-import com.nerdwin15.bacabs.ConcreteGitBranch;
-import com.nerdwin15.bacabs.ConcreteJiraIssue;
 import com.nerdwin15.bacabs.Deployment;
-import com.nerdwin15.bacabs.service.git.GitBranchRetrievalService;
-import com.nerdwin15.bacabs.service.jira.JiraIssueRetriever;
+import com.nerdwin15.bacabs.DeploymentBuilder;
 import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.Property;
@@ -63,6 +59,9 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
   @org.soulwing.cdi.properties.Property
   protected String hrefRoot;
 
+  @Inject
+  protected DeploymentBuilder deploymentBuilder;
+
   protected ModelControllerClient wildflyClient;
 
   @PostConstruct
@@ -93,11 +92,8 @@ public class WildflyRemoteDeploymentRetriever implements RemoteDeploymentRetriev
         continue;
 
       String identifier = href.substring(1);
-
-      ConcreteDeployment deployment = new ConcreteDeployment();
-      deployment.setHref(hrefRoot + href);
-      deployment.setIdentifier(identifier);
-      deployments.add(deployment);
+      href = hrefRoot + href;
+      deployments.add(deploymentBuilder.href(href).identifier(identifier).build());
     }
 
 

@@ -18,18 +18,17 @@
  */
 package com.nerdwin15.bacabs.service;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-
 import com.nerdwin15.bacabs.Deployment;
 import com.nerdwin15.bacabs.event.NewDeploymentEvent;
 import com.nerdwin15.bacabs.event.RemovedDeploymentEvent;
 import com.nerdwin15.bacabs.event.UpdatedDeploymentEvent;
 import com.nerdwin15.bacabs.repository.DeploymentRepository;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A CDI-injectable implementation of the {@link DeploymentService}

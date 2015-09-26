@@ -1,6 +1,6 @@
 package com.nerdwin15.bacabs.service.jira.client;
 
-import com.nerdwin15.bacabs.ConcreteJiraIssue;
+import com.nerdwin15.bacabs.domain.ConcreteJiraIssue;
 import com.nerdwin15.bacabs.JiraIssue;
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
@@ -10,7 +10,6 @@ import org.soulwing.cdi.properties.Property;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
@@ -54,7 +53,7 @@ public class CasJiraClient extends AbstractJiraClient {
    * {@inheritDoc}
    */
   @Override
-  protected JiraIssue performFetch(Client client, String url) {
+  protected Response performFetch(Client client, String url) {
     logger.info("Fetching JIRA data using URL: " + url);
     if (sessionCookie == null) {
       return authenticate(client, url);
@@ -64,14 +63,10 @@ public class CasJiraClient extends AbstractJiraClient {
         .request()
         .cookie(sessionCookie)
         .get();
-    try {
-      return response.readEntity(ConcreteJiraIssue.class);
-    } finally {
-      response.close();
-    }
+    return response;
   }
 
-  private JiraIssue authenticate(Client client, String jiraRequestUrl) {
+  private Response authenticate(Client client, String jiraRequestUrl) {
     logger.info("Authenticating JIRA client");
     Form form = new Form();
     form.param("username", username).param("password", password);

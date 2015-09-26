@@ -16,61 +16,71 @@
  * limitations under the License.
  *
  */
-package com.nerdwin15.bacabs;
+package com.nerdwin15.bacabs.domain;
+
+import com.nerdwin15.bacabs.GitBranch;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.nerdwin15.bacabs.service.git.GitBranchDeserializer;
-
 /**
- * Implementation of {@link GitBranch}.
+ * Implementation of {@link GitBranch} that is ready for JAXB/Jackson
+ * marshalling.
  *
  * @author Christopher M. Dunavant
+ * @author Michael Irwin
  */
 @XmlRootElement(name = "branch")
 @XmlAccessorType(XmlAccessType.FIELD)
-@JsonDeserialize(using = GitBranchDeserializer.class)
 public class ConcreteGitBranch implements GitBranch {
 
   @XmlElement
-  private String committerName;
+  private String name;
+
+  @XmlElement
+  private String lastCommitAuthor;
   
   @XmlElement
-  private String commitDate;
-  
-  /**
-   * {@inheritDoc}
-   */
+  private String lastCommitDate;
+
   @Override
-  public String getCommitterName() {
-    return committerName;
+  public String getName() {
+    return name;
   }
 
   /**
-   * Sets the {@code committerName} property.
-   * @param name the value to set
+   * Set the name of the branch
+   * @param name The name of the branch
    */
-  public void setCommitterName(String committerName) {
-    this.committerName = committerName;
+  public void setName(String name) {
+    this.name = name;
   }
-  
-  /**
-   * {@inheritDoc}
-   */
+
   @Override
-  public String getCommitDate() {
-    return commitDate;
+  public String getLastCommitAuthor() {
+    return lastCommitAuthor;
   }
 
   /**
-   * Sets the {@code commitDate} property.
-   * @param date the value to set
+   * Sets the {@code lastCommitAuthor} property.
+   * @param lastCommitAuthor the value to set
    */
-  public void setCommitDate(String commitDate) {
-    this.commitDate = commitDate;
+  public void setLastCommitAuthor(String lastCommitAuthor) {
+    this.lastCommitAuthor = lastCommitAuthor;
+  }
+  
+  @Override
+  public String getLastCommitDate() {
+    return lastCommitDate;
+  }
+
+  /**
+   * Sets the {@code lastCommitDate} property.
+   * @param lastCommitDate the value to set
+   */
+  public void setLastCommitDate(String lastCommitDate) {
+    this.lastCommitDate = lastCommitDate;
   }
 }

@@ -24,7 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import com.nerdwin15.bacabs.ConcreteDeployment;
+import com.nerdwin15.bacabs.domain.ConcreteDeployment;
 import com.nerdwin15.bacabs.service.DeploymentService;
 import com.nerdwin15.bacabs.service.RemoteDeploymentRetriever;
 
