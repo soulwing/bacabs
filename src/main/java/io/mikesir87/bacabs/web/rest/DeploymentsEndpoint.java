@@ -18,15 +18,12 @@
  */
 package io.mikesir87.bacabs.web.rest;
 
+import io.mikesir87.bacabs.service.DeploymentService;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
-import io.mikesir87.bacabs.domain.ConcreteDeployment;
-import io.mikesir87.bacabs.service.DeploymentService;
-import io.mikesir87.bacabs.service.RemoteDeploymentRetriever;
 
 /**
  * An endpoint used for interacting with deployments
@@ -38,18 +35,10 @@ public class DeploymentsEndpoint {
 
   @Inject
   protected DeploymentService deploymentService;
-  
-  @Inject
-  protected RemoteDeploymentRetriever syncService;
 
   @GET
   public Response getDeployments() throws Exception {
     return Response.ok(deploymentService.getDeployments()).build();
   }
-  
-  @POST
-  public Response postDeployment(ConcreteDeployment deployment) {
-    deploymentService.addDeployment(deployment);
-    return Response.created(null).build();
-  }
+
 }
