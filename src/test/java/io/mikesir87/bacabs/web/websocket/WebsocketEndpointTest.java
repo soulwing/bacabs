@@ -16,7 +16,7 @@
  * limitations under the License.
  *
  */
-package io.mikesir87.bacabs.websocket;
+package io.mikesir87.bacabs.web.websocket;
 
 import java.util.HashSet;
 import java.util.Set;

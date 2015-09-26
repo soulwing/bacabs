@@ -16,35 +16,23 @@
  * limitations under the License.
  *
  */
-package io.mikesir87.bacabs.websocket;
+package io.mikesir87.bacabs.web.websocket;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 import javax.websocket.Session;
 
 import io.mikesir87.bacabs.event.topic.Subscriber;
 
 /**
- * A CDI-injectable {@link WebsocketSubscriberFactory}.
+ * Defines a factory that creates {@link Subscriber} objects
  *
  * @author Michael Irwin
  */
-@ApplicationScoped
-public class WebsocketSubscriberFactoryBean 
-    implements WebsocketSubscriberFactory {
+public interface WebsocketSubscriberFactory {
 
-  @Inject
-  protected Instance<WebsocketSubscriber> subscriberHolder;
-  
   /**
-   * {@inheritDoc}
+   * Creates a websocket subscriber
+   * @param session The websocket session
+   * @return A subscriber
    */
-  @Override
-  public Subscriber createSubscriber(Session session) {
-    WebsocketSubscriber subscriber = subscriberHolder.get();
-    subscriber.setSession(session);
-    return subscriber;
-  }
-  
+  Subscriber createSubscriber(Session session);
 }

@@ -16,7 +16,7 @@
  * limitations under the License.
  *
  */
-package io.mikesir87.bacabs.rest;
+package io.mikesir87.bacabs.web.rest;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
