@@ -1,5 +1,6 @@
 package io.mikesir87.bacabs.service.jira.client;
 
+import io.mikesir87.bacabs.service.ChosenPerConfiguration;
 import org.soulwing.cdi.properties.Property;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,7 +27,7 @@ public class JiraClientProducer {
   protected Instance<BasicAuthJiraClient> basicAuthJiraClient;
 
   @ApplicationScoped
-  @Produces @ChosenClient
+  @Produces @ChosenPerConfiguration
   public JiraClient produceJiraClient() {
     switch (authType.toLowerCase()) {
       case "cas" :

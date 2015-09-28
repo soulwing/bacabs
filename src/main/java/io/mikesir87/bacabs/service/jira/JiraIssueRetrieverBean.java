@@ -1,10 +1,9 @@
 package io.mikesir87.bacabs.service.jira;
 
 import io.mikesir87.bacabs.JiraIssue;
-import io.mikesir87.bacabs.service.jira.client.ChosenClient;
+import io.mikesir87.bacabs.service.ChosenPerConfiguration;
 import io.mikesir87.bacabs.service.jira.client.JiraClient;
 import org.soulwing.cdi.properties.Property;
-
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -26,7 +25,7 @@ public class JiraIssueRetrieverBean implements JiraIssueRetriever {
   @Property
   protected String jiraIdPattern;
 
-  @Inject @ChosenClient
+  @Inject @ChosenPerConfiguration
   protected JiraClient jiraClient;
 
   /**
