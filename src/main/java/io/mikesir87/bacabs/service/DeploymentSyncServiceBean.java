@@ -41,7 +41,7 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
 
   private static final Logger logger = LoggerFactory.getLogger(DeploymentSyncServiceBean.class);
 
-  @Inject
+  @Inject @ChosenPerConfiguration
   protected RemoteDeploymentRetriever deploymentRetriever;
 
   @Inject
