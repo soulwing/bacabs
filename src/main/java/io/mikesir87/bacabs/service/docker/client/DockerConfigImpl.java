@@ -7,9 +7,17 @@ package io.mikesir87.bacabs.service.docker.client;
  */
 public class DockerConfigImpl implements DockerConfig {
 
+  private final Integer localPort;
   private final String ip;
   private final String dockerCertPath;
   private final String dockerMachine;
+
+  public DockerConfigImpl(Integer localPort) {
+    this.localPort = localPort;
+    this.ip = null;
+    this.dockerCertPath = null;
+    this.dockerMachine = null;
+  }
 
   /**
    * Create a new instance
@@ -22,6 +30,17 @@ public class DockerConfigImpl implements DockerConfig {
     this.ip = ip;
     this.dockerCertPath = dockerCertPath;
     this.dockerMachine = dockerMachine;
+    this.localPort = null;
+  }
+
+  @Override
+  public boolean isRunningLocally() {
+    return localPort != null;
+  }
+
+  @Override
+  public Integer getLocalPort() {
+    return localPort;
   }
 
   @Override

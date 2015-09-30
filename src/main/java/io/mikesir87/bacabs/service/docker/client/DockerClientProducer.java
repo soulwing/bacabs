@@ -27,12 +27,17 @@ public class DockerClientProducer {
   @Produces
   @ApplicationScoped
   public DockerClient dockerClient() {
+    if (dockerConfig.isRunningLocally()) {
+      return DockerClientBuilder
+          .getInstance("http://127.0.0.1:" + dockerConfig.getLocalPort())
+          .build();
+    }
+
     DockerClientConfig config = DockerClientConfig
         .createDefaultConfigBuilder()
         .withUri("https://" + dockerConfig.getIp() + ":2376")
         .withDockerCertPath(dockerConfig.getDockerCertPath())
         .build();
-
     return DockerClientBuilder.getInstance(config)
         .build();
   }
