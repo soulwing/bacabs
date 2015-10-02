@@ -30,7 +30,8 @@ public class JsonResponseHandler implements ResponseHandler {
     String responseData = response.readEntity(String.class);
     JsonReader reader = Json.createReader(new StringReader(responseData));
     JsonObject baseObject = reader.readObject();
-    if (baseObject.containsKey("errorMessages") && response.getStatus() == 404)
+    if (baseObject.containsKey("errorMessages") || response.getStatus() == 404
+        || !baseObject.containsKey("fields"))
       return null;
 
     JsonObject fields = baseObject.getJsonObject("fields");
