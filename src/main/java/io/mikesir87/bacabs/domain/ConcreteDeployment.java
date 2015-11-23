@@ -46,6 +46,9 @@ public class ConcreteDeployment implements Deployment {
   
   @XmlElement
   private String summary;
+
+  @XmlElement
+  private Status status;
   
   @XmlElement
   private ConcreteJiraIssue jiraIssue;
@@ -93,6 +96,16 @@ public class ConcreteDeployment implements Deployment {
    */
   public void setSummary(String summary) {
     this.summary = summary;
+  }
+
+  @Override
+  public Status getStatus() {
+    return status;
+  }
+
+  @Override
+  public void setStatus(Status status) {
+    this.status = status;
   }
 
   @Override

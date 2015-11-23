@@ -53,6 +53,7 @@ public class DeploymentSyncServiceBeanTest {
   @Mock RemoteDeploymentRetriever deploymentRetriever;
   @Mock JiraIssueRetriever jiraIssueRetriever;
   @Mock GitBranchRetrievalService gitBranchRetrievalService;
+  @Mock StatusCheckingService statusCheckingService;
 
   @Mock JiraIssue jiraIssue1;
   @Mock JiraIssue jiraIssue2;
@@ -81,6 +82,7 @@ public class DeploymentSyncServiceBeanTest {
     service.identifierPattern = MATCH_PATTERN;
     service.jiraIssueRetriever = jiraIssueRetriever;
     service.gitBranchRetrievalService = gitBranchRetrievalService;
+    service.statusCheckingService = statusCheckingService;
 
     setDeploymentExpectations();
     knownDeployments.add(knownDeployment1);
@@ -95,6 +97,7 @@ public class DeploymentSyncServiceBeanTest {
   public void testSync() throws Exception {
     setJiraIssueRetrieverExpectations();
     setGitBranchRetrieverExpectations();
+    setStatusCheckingServiceExpectations();
 
     context.checking(new Expectations() {
       {
@@ -113,20 +116,24 @@ public class DeploymentSyncServiceBeanTest {
   
   
   private void setDeploymentExpectations() {
-    context.checking(new Expectations() { {
-      oneOf(knownDeployment2).getIdentifier();
-      will(returnValue(KNOWN_ID_2));
-      oneOf(knownDeployment2).setJiraIssue(jiraIssue2);
-      oneOf(knownDeployment2).setGitBranch(gitBranch2);
+    context.checking(new Expectations() {
+      {
+        oneOf(knownDeployment2).getIdentifier();
+        will(returnValue(KNOWN_ID_2));
+        oneOf(knownDeployment2).setJiraIssue(jiraIssue2);
+        oneOf(knownDeployment2).setGitBranch(gitBranch2);
+        oneOf(knownDeployment2).setStatus(Deployment.Status.VERIFIED);
 
-      oneOf(newDeployment).getIdentifier();
-      will(returnValue(NEW_ID_1));
-      oneOf(newDeployment).setJiraIssue(jiraIssue3);
-      oneOf(newDeployment).setGitBranch(gitBranch3);
+        oneOf(newDeployment).getIdentifier();
+        will(returnValue(NEW_ID_1));
+        oneOf(newDeployment).setJiraIssue(jiraIssue3);
+        oneOf(newDeployment).setGitBranch(gitBranch3);
+        oneOf(newDeployment).setStatus(Deployment.Status.UNKNOWN);
 
-      oneOf(badNewDeployment).getIdentifier();
+        oneOf(badNewDeployment).getIdentifier();
         will(returnValue(BAD_NEW_ID));
-    } });
+      }
+    });
   }
 
   private void setJiraIssueRetrieverExpectations() {
@@ -145,6 +152,16 @@ public class DeploymentSyncServiceBeanTest {
         will(returnValue(gitBranch2));
       oneOf(gitBranchRetrievalService).retrieveGitBranch(NEW_ID_1);
         will(returnValue(gitBranch3));
+    } });
+  }
+
+  private void setStatusCheckingServiceExpectations() {
+    context.checking(new Expectations() { {
+      oneOf(statusCheckingService).getStatus(knownDeployment2);
+      will(returnValue(Deployment.Status.VERIFIED));
+
+      oneOf(statusCheckingService).getStatus(newDeployment);
+      will(returnValue(Deployment.Status.UNKNOWN));
     } });
   }
 }

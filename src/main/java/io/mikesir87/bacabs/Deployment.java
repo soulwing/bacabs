@@ -27,6 +27,10 @@ import java.util.Date;
  */
 public interface Deployment {
 
+  enum Status {
+    VERIFIED, UNKNOWN
+  }
+
   /**
    * Get the identifier for the deployment
    * @return The identifier
@@ -44,6 +48,21 @@ public interface Deployment {
    * @return The summary
    */
   String getSummary();
+
+  /**
+   * Get the status for the deployment. By simply having a deployment, it is
+   * not 100% guaranteed that the deployment is active and ready to be accessed.
+   * The status indicates whether the deployment has been confirmed to be up
+   * or not.
+   * @return The status for the deployment
+   */
+  Status getStatus();
+
+  /**
+   * Set the status for the deployment
+   * @param status
+   */
+  void setStatus(Status status);
   
   /**
    * Get the Jira issue associated with this deployment

@@ -18,6 +18,7 @@
  */
 package io.mikesir87.bacabs.repository;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -73,6 +74,15 @@ public class LocalDeploymentRepository implements DeploymentRepository {
     e.setIdentifier(d.getIdentifier());
     e.setJiraIssue(d.getJiraIssue());
     e.setSummary(d.getSummary());
+
+    if (e.getStatus().equals(Deployment.Status.UNKNOWN) &&
+        d.getStatus().equals(Deployment.Status.VERIFIED)) {
+      e.setDiscoveryTime(new Date());
+    }
+    e.setStatus(d.getStatus());
+
+
+
     return e;
   }
 

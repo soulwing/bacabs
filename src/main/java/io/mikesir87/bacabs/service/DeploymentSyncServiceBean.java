@@ -53,6 +53,9 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
   @Inject
   protected GitBranchRetrievalService gitBranchRetrievalService;
 
+  @Inject
+  protected StatusCheckingService statusCheckingService;
+
   @Inject @Property
   protected String identifierPattern;
 
@@ -76,6 +79,7 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
 
       deployment.setJiraIssue(jiraIssueRetriever.getIssueDetails(identifier));
       deployment.setGitBranch(gitBranchRetrievalService.retrieveGitBranch(identifier));
+      deployment.setStatus(statusCheckingService.getStatus(deployment));
 
       if (knownDeployments.contains(deployment)) {
         knownDeployments.remove(deployment);
