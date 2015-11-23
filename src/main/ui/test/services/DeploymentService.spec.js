@@ -10,7 +10,7 @@ describe("DeploymentService", function() {
     this.immediate = function(key) { return this.cbs[key]; };
   }
 
-  beforeEach(module('bacabs.services.deploymentService'));
+  beforeEach(module('bacabs'));
 
   beforeEach(module(function($provide) {
     $provide.value('CacheService', cacheService);

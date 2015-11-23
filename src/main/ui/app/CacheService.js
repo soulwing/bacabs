@@ -10,32 +10,32 @@
  * UI-interaction.
  */
 
-/**
- * @ngdoc service
- * @name CacheService
- * @kind class
- *
- * @description
- *   The caching service provides a single repository for key/value pairs. It
- *   is intended to be used by other services to ensure all code is working on
- *   the same models.
- *   
- *   For example, a summary service fetches all summaries and provides them to
- *   the UI controller. Those same summaries may need to be updated as events
- *   come in through a WebSocket. In order for the WebSocket to update the same
- *   model(s), those models need to be shared across the application.
- */
-
 (function() {
   
-  var services = angular.module('bacabs.services.cacheService', []);
-  
-  services.factory('CacheService', function($q, $http) {
+  angular.module('bacabs', [])
+      .factory('CacheService', CacheService);
+
+  /**
+   * @ngdoc service
+   * @name CacheService
+   * @kind class
+   *
+   * @description
+   *   The caching service provides a single repository for key/value pairs. It
+   *   is intended to be used by other services to ensure all code is working on
+   *   the same models.
+   *
+   *   For example, a summary service fetches all summaries and provides them to
+   *   the UI controller. Those same summaries may need to be updated as events
+   *   come in through a WebSocket. In order for the WebSocket to update the same
+   *   model(s), those models need to be shared across the application.
+   */
+  function CacheService($q) {
     var dataCache = new (function() {
       
       /**
-       * @ngdoc function
-       * @name get
+       * @ngdoc method
+       * @name CacheService#get
        * @kind function
        * 
        * @param String key The key for the data value
@@ -61,7 +61,18 @@
         loadFunction(createCallback(key, deferred));
         return deferred.promise;
       };
-      
+
+      /**
+       * @ngdoc method
+       * @name CacheService#getImmediate
+       * @param key Key of the data value
+       * @returns {*} The value stored for the provided key
+       *
+       * @description
+       * Gets the immediate value for the provided key, without the possibility
+       * for loading/setting.  This is done synchronously, so will return
+       * immediately.
+       */
       this.getImmediate = function(key) {
         return cache[key];
       };
@@ -82,9 +93,7 @@
       
     });
     
-//    window.dataCache = dataCache;
     return dataCache;
-  });
-  
+  }
   
 })();

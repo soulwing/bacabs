@@ -1,16 +1,47 @@
 (function() {
 
+  angular.module('bacabs')
+      .service('DeploymentService', DeploymentService);
+
   /**
-   * A service that is used as a repository for Deployments
+   * @ngdoc service
+   * @name DeploymentService
+   *
+   * @description
+   * A service that provides the ability to interact with deployments.
    */
-  var DeploymentService = function($http, $filter, CacheService, WebSocketService) {
-    var self = this;
+  function DeploymentService($http, CacheService, WebSocketService) {
+    _init();
+
+    return {
+      getDeployments : getDeployments,
+      getDeployment : getDeployment
+    };
+
+    ////////
 
     /**
-     * Get all deployments known to the system
-     * @returns Promise A promise that'll resolve with all known deployments
+     * @private
+     *
+     * @description
+     * Initialization for the service that sets up various websocket listeners
      */
-    this.getDeployments = function() {
+    function _init() {
+      WebSocketService.registerListener("NewDeploymentEvent", _newDeploymentEventListener);
+      WebSocketService.registerListener("UpdatedDeploymentEvent", _updatedDeploymentEventListener);
+      WebSocketService.registerListener("RemovedDeploymentEvent", _removedDeploymentEventListener);
+    }
+
+    /**
+     * @ngdoc method
+     * @name DeploymentService#getDeployments
+     * @returns Promise A promise that'll resolve with all known deployments
+     *
+     * @description
+     * Get all deployments known in the system.  This method call utilizes a
+     * cache, so will hit the backend once.
+     */
+    function getDeployments() {
       return CacheService.get("deployments", function(callback) {
         $http.get(CONTEXT_BASE + "/api/deployments")
             .success(function(data) {
@@ -20,11 +51,15 @@
     };
 
     /**
-     * Get a specific deployment, based on its identifier
+     * @ngdoc method
+     * @name DeploymentService#getDeployment
      * @param identifier The identifier of the deployment
      * @returns object The deployment, if found. Otherwise, null.
+     *
+     * @description
+     * Get a specific deployment, based on its identifier
      */
-    this.getDeployment = function(identifier) {
+    function getDeployment(identifier) {
       var deployments = CacheService.getImmediate("deployments");
       if (deployments == null) return null;
       for (var i = 0; i < deployments.length; i++) {
@@ -39,8 +74,8 @@
      * @param event The event payload
      * @private
      */
-    this._newDeploymentEventListener = function(event) {
-      self.getDeployments().then(function(deployments) {
+    function _newDeploymentEventListener(event) {
+      getDeployments().then(function(deployments) {
         deployments.push(event.deployment);
       })
     }
@@ -50,8 +85,8 @@
      * @param event The event details
      * @private
      */
-    this._updatedDeploymentEventListener = function(event) {
-      self.getDeployments().then(function(deployments) {
+    function _updatedDeploymentEventListener(event) {
+      getDeployments().then(function(deployments) {
         var existingDeploymentIndex = deployments.reduce(function(current, value, index) {
           return current + (value.identifier == event.deployment.identifier ? index : 0);
         }, null);
@@ -68,8 +103,8 @@
      * @param event The event details
      * @private
      */
-    this._removedDeploymentEventListener = function(event) {
-      self.getDeployments().then(function(deployments) {
+    function _removedDeploymentEventListener(event) {
+      getDeployments().then(function(deployments) {
         var deployment = event.deployment;
         for (var i = 0; i < deployments.length; i++) {
           if (deployments[i].identifier == deployment.identifier) {
@@ -80,11 +115,6 @@
       });
     }
 
-    WebSocketService.registerListener("NewDeploymentEvent", this._newDeploymentEventListener);
-    WebSocketService.registerListener("UpdatedDeploymentEvent", this._updatedDeploymentEventListener);
-    WebSocketService.registerListener("RemovedDeploymentEvent", this._removedDeploymentEventListener);
   };
 
-  angular.module('bacabs.services.deploymentService', ['bacabs.services.cacheService', 'bacabs.services.webSocketService'])
-      .service('DeploymentService', DeploymentService);
 })();

@@ -1,15 +1,19 @@
 (function() {
 
-  angular.module('bacabs.controllers', ['bacabs.services', 'bacabs.directives', 'ui.bootstrap'])
+  angular.module('bacabs')
       .controller('appController', AppController);
 
-  function AppController(deployments, NotificationService, WebSocketService) {
+  function AppController(deployments, NotificationService) {
     var vm = this;
+
     vm.deployments = deployments;
     vm.allowDesktopNotifications = NotificationService.isPermitted();
+
     vm.requestNotifications = requestNotifications;
     vm.stopNotifications = stopNotifications;
     vm.hasUnverifiedDeployment = hasUnverifiedDeployment;
+
+    // Only for debugging, to allow inspection from the console/developer tools
     window.deployments = deployments;
 
     ////////
