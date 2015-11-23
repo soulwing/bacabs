@@ -15,6 +15,7 @@
     "angular-ui-router": "^0.2.11",
     "jquery": "~2.1.4",
     "bootswatch-dist": "3.3.0-yeti",
-    "angular-mocks": "~1.4.2"
+    "angular-mocks": "~1.4.2",
+    "angular-bootstrap": "~0.14.1"
   }
 }
