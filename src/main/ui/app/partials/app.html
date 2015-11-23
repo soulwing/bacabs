@@ -5,11 +5,11 @@
     </div>
     <div class="nav navbar-nav navbar-right">
       <ul>
-        <li ng-if="!allowDesktopNotifications">
-          <a style="margin-top:8px" ng-click="requestNotifications()" class="btn btn-primary btn-sm">Enable Desktop Notifications</a>
+        <li ng-if="!ctrl.allowDesktopNotifications">
+          <a style="margin-top:8px" ng-click="ctrl.requestNotifications()" class="btn btn-primary btn-sm">Enable Desktop Notifications</a>
         </li>
-        <li ng-if="allowDesktopNotifications">
-          <a style="margin-top:8px" ng-click="stopNotifications()" class="btn btn-primary btn-sm">Stop Desktop Notifications</a>
+        <li ng-if="ctrl.allowDesktopNotifications">
+          <a style="margin-top:8px" ng-click="ctrl.stopNotifications()" class="btn btn-primary btn-sm">Stop Desktop Notifications</a>
         </li>
       </ul>
     </div>
@@ -21,41 +21,33 @@
     <div class="col-md-12">
       <h2>Deployed Applications</h2>
 
-      <div ng-if="!deployments || deployments.length == 0">
+      <div ng-if="!ctrl.deployments || ctrl.deployments.length == 0">
         <p>There are currently no deployments of interest.</p>
         <p>Keep watching though, as this page updates automatically!</p>
       </div>
 
-      <div ng-if="deployments && deployments.length > 0">
+      <div ng-if="ctrl.deployments && ctrl.deployments.length > 0">
         <p>The following applications are deployed in the server.</p>
         <table class="table table-striped">
           <tr>
+            <th></th>
             <th>Deployment</th>
             <th>Summary</th>
-            <th>
-              Description
-            </th>
-            <th>
-              Acceptance Task Status?
-            </th>
-            <th>
-              % Progress
-            </th>
-            <th>
-              Code Last Updated
-            </th>
-            <th>
-              Discovery Time
-            </th>
+            <th>Description</th>
+            <th>Acceptance Task Status?</th>
+            <th>% Progress</th>
+            <th>Code Last Updated</th>
+            <th>Discovery Time</th>
           </tr>
-          <tr ng-repeat="deployment in deployments | orderBy:'identifier':reverse" ng-class="{'strikethru' : deployment.jiraIssue.status == 'Closed'}">
+          <tr ng-repeat="deployment in ctrl.deployments | orderBy:'identifier':reverse" ng-class="{'strikethru' : deployment.jiraIssue.status == 'Closed'}">
+            <td>
+              <span class="text-warning" ng-if="deployment.status=='UNKNOWN'" uib-tooltip="Deployment not verified">
+                <i class="fa fa-exclamation-triangle"></i>
+              </span>
+            </td>
             <td><a href="{{deployment.href}}">{{deployment.identifier}}</a></td>
-            <td>
-              {{deployment.jiraIssue.summary}}
-            </td>
-            <td>
-              {{deployment.jiraIssue.description}}
-            </td>
+            <td>{{deployment.jiraIssue.summary}}</td>
+            <td>{{deployment.jiraIssue.description}}</td>
             <td>
               <span ng-if="deployment.jiraIssue.acceptanceTaskStatus">{{deployment.jiraIssue.acceptanceTaskStatus}}</span>
               <span ng-if="!deployment.jiraIssue.acceptanceTaskStatus"><em>No Acceptance Test</em></span>
@@ -72,11 +64,14 @@
                Merged to qa (or other branch)
              </span>
             </td>
-            <td>
-              {{deployment.discoveryTime | date:'MM/dd/yyyy @ h:mma'}}
-            </td>
+            <td>{{deployment.discoveryTime | date:'MM/dd/yyyy @ h:mma'}}</td>
           </tr>
         </table>
+
+        <p ng-show="ctrl.hasUnverifiedDeployment()" class="alert">
+          <span class="text-warning"><i class="fa fa-exclamation-triangle"></i></span>
+          Non-verified deployments indicate that a container exists, but that the deployment is either still deploying or failed.  If the status persists more than a minute or two, the deployment most likely failed.
+        </p>
       </div>
     </div>
   </div>

@@ -1,6 +1,9 @@
 (function() {
 
-  var stateConfig = function($stateProvider, $urlRouterProvider) {
+  angular.module('bacabs', ['ui.router', 'bacabs.controllers', 'bacabs.services', 'templates'])
+      .config(stateConfig);
+
+  function stateConfig($stateProvider, $urlRouterProvider) {
     $urlRouterProvider
         .otherwise("/");
 
@@ -8,7 +11,7 @@
         .state('root', {
           url : "/",
           templateUrl : 'app/partials/app.html',
-          controller : 'appController',
+          controller : 'appController as ctrl',
           resolve : {
             deployments : function(DeploymentService) {
               return DeploymentService.getDeployments();
@@ -17,6 +20,4 @@
         });
   };
   
-  angular.module('bacabs', ['ui.router', 'bacabs.controllers', 'bacabs.services', 'templates'])
-      .config(stateConfig);
 })();
