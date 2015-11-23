@@ -1,6 +1,6 @@
 (function() {
 
-  angular.module('bacabs.services.webSocketService', [])
+  angular.module('bacabs')
       .service('WebSocketService', WebSocketService)
       .run(_initService);
 

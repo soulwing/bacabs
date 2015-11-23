@@ -12,7 +12,7 @@
 
 (function() {
   
-  angular.module('bacabs', [])
+  angular.module('bacabs')
       .factory('CacheService', CacheService);
 
   /**
