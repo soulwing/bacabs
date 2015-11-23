@@ -10,7 +10,7 @@
    * @description
    * A service that provides the ability to interact with deployments.
    */
-  function DeploymentService($http, CacheService, WebSocketService) {
+  function DeploymentService($http, CacheService, EventBus) {
     _init();
 
     return {
@@ -27,9 +27,9 @@
      * Initialization for the service that sets up various websocket listeners
      */
     function _init() {
-      WebSocketService.registerListener("NewDeploymentEvent", _newDeploymentEventListener);
-      WebSocketService.registerListener("UpdatedDeploymentEvent", _updatedDeploymentEventListener);
-      WebSocketService.registerListener("RemovedDeploymentEvent", _removedDeploymentEventListener);
+      EventBus.on("NewDeploymentEvent", _newDeploymentEventListener);
+      EventBus.on("UpdatedDeploymentEvent", _updatedDeploymentEventListener);
+      EventBus.on("RemovedDeploymentEvent", _removedDeploymentEventListener);
     }
 
     /**

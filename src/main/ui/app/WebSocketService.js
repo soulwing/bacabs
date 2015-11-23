@@ -4,7 +4,7 @@
       .service('WebSocketService', WebSocketService)
       .run(_initService);
 
-  function WebSocketService($timeout) {
+  function WebSocketService($timeout, EventBus) {
     var topicListeners = {};
     _init();
     return {
@@ -73,6 +73,8 @@
           }
         }
       }
+
+      $timeout(function() { EventBus.broadcast(topic, data); });
     }
 
     /**
