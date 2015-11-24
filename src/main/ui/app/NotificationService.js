@@ -93,7 +93,7 @@
      * @private
      */
     function _onRemovedDeploymentEvent(event) {
-      if (self.isPermitted())
+      if (isPermitted())
         return;
 
       var deployment = event.deployment;
@@ -107,7 +107,7 @@
      * @private
      */
     function _onUpdatedDeploymentEvent(event) {
-      if (!self.isPermitted()) return;
+      if (!isPermitted()) return;
       var deployment = event.deployment;
       var existingDeployment = DeploymentService.getDeployment(deployment.identifier);
       if (existingDeployment == null) return;
