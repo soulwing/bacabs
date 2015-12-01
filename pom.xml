@@ -5,16 +5,17 @@
   <groupId>io.mikesir87.bacabs</groupId>
   <artifactId>bacabs</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>war</packaging>
 
   <name>Bacabs</name>
+  <packaging>pom</packaging>
+  <description>Base config</description>
 
   <properties>
     <java.version>1.7</java.version>
     <jmock.version>2.6.0</jmock.version>
     <hamcrest.version>1.3</hamcrest.version>
     <undertow.version>1.1.1.Final</undertow.version>
-    <version.wildfly-swarm>1.0.0.Alpha6-SNAPSHOT</version.wildfly-swarm>
+    <wildfly-swarm.version>1.0.0.Alpha6-SNAPSHOT</wildfly-swarm.version>
   </properties>
 
   <repositories>
@@ -38,54 +39,41 @@
   </pluginRepositories>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.1</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.github.eirslett</groupId>
+          <artifactId>frontend-maven-plugin</artifactId>
+          <version>0.0.23</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.16</version>
+          <configuration>
+            <includes>
+              <include>**/*Test.java</include>
+            </includes>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <version>0.0.23</version>
-        <executions>
-          <execution>
-            <id>install node and npm</id>
-            <goals>
-              <goal>install-node-and-npm</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>v0.12.5</nodeVersion>
-              <npmVersion>2.7.5</npmVersion>
-            </configuration>
-          </execution>
-          <execution>
-            <id>npm install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>install</arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>gulp build:prod</id>
-            <goals>
-              <goal>gulp</goal>
-            </goals>
-            <configuration>
-              <arguments>build:prod</arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.16</version>
@@ -95,214 +83,274 @@
           </includes>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <webResources>
-            <resource>
-              <filtering>true</filtering>
-              <directory>src/main/webapp</directory>
-              <includes>
-                <include>**/web.xml</include>
-                <include>**/jboss-web.xml</include>
-                <include>product.json</include>
-              </includes>
-            </resource>
-            <resource>
-              <directory>target/gulp-webapp/app</directory>
-            </resource>
-          </webResources>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-          <packagingExcludes>WEB-INF/lib/shrinkwrap-*.jar</packagingExcludes>
-          <packagingExcludes>WEB-INF/lib/wildfly-swarm-*.jar</packagingExcludes>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>wildfly-swarm</id>
-      <activation>
-        <property>
-          <name>swarm</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.wildfly.swarm</groupId>
-            <artifactId>wildfly-swarm-plugin</artifactId>
-            <version>${version.wildfly-swarm}</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>package</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-      <dependencies>
-        <dependency>
-          <groupId>org.wildfly.swarm</groupId>
-          <artifactId>wildfly-swarm-undertow-runtime</artifactId>
-          <version>${version.wildfly-swarm}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.wildfly.swarm</groupId>
-          <artifactId>wildfly-swarm-jaxrs-weld</artifactId>
-          <version>${version.wildfly-swarm}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.wildfly.swarm</groupId>
-          <artifactId>wildfly-swarm-jaxrs-jaxb</artifactId>
-          <version>${version.wildfly-swarm}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.wildfly.swarm</groupId>
-          <artifactId>wildfly-swarm-jaxrs-jsonp</artifactId>
-          <version>${version.wildfly-swarm}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.wildfly.swarm</groupId>
-          <artifactId>wildfly-swarm-jaxrs-runtime</artifactId>
-          <version>${version.wildfly-swarm}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.wildfly.swarm</groupId>
-          <artifactId>wildfly-swarm-ejb-runtime</artifactId>
-          <version>${version.wildfly-swarm}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
   <dependencies>
     <dependency>
       <groupId>org.jboss.spec.javax.ws.rs</groupId>
       <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-      <version>1.0.0.Final</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>javax.enterprise</groupId>
       <artifactId>cdi-api</artifactId>
-      <version>1.2</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.spec.javax.websocket</groupId>
-      <artifactId>jboss-websocket-api_1.1_spec</artifactId>
-      <version>1.1.0.Final</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.spec.javax.ejb</groupId>
-      <artifactId>jboss-ejb-api_3.2_spec</artifactId>
-      <version>1.0.0.Final</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jmock</groupId>
-      <artifactId>jmock-junit4</artifactId>
-      <version>${jmock.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jmock</groupId>
-      <artifactId>jmock-legacy</artifactId>
-      <version>${jmock.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-core</artifactId>
-      <version>${hamcrest.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
-      <version>${hamcrest.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.undertow</groupId>
-      <artifactId>undertow-servlet</artifactId>
-      <version>${undertow.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.soulwing</groupId>
       <artifactId>pinject-api</artifactId>
-      <version>1.0.12-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.soulwing</groupId>
       <artifactId>pinject-extension</artifactId>
-      <version>1.0.12-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.wildfly</groupId>
-      <artifactId>wildfly-controller-client</artifactId>
-      <version>8.2.0.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-json-provider</artifactId>
-      <version>2.4.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jgit</groupId>
-      <artifactId>org.eclipse.jgit</artifactId>
-      <version>3.7.0.201502260915-r</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.0.13</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.github.docker-java</groupId>
-      <artifactId>docker-java</artifactId>
-      <version>2.1.1</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.4.1</version>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock-junit4</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-multipart-provider</artifactId>
-      <version>3.0.10.Final</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>commons-logging</artifactId>
-          <groupId>commons-logging</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>httpclient</artifactId>
-          <groupId>org.apache.httpcomponents</groupId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock-legacy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
     </dependency>
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-retrievers-spi</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-retrievers-docker</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-retriever-wildfly</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-git-spi</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-git-local</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-issuetracker-spi</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-issuetracker-jira</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-issuetracker-jira-cas</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-issuetracker-jira-basic</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- Third-party dependencies -->
+      <dependency>
+        <groupId>org.soulwing</groupId>
+        <artifactId>pinject-api</artifactId>
+        <version>1.0.12-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.soulwing</groupId>
+        <artifactId>pinject-extension</artifactId>
+        <version>1.0.12-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jgit</groupId>
+        <artifactId>org.eclipse.jgit</artifactId>
+        <version>3.7.0.201502260915-r</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly</groupId>
+        <artifactId>wildfly-controller-client</artifactId>
+        <version>8.2.0.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.docker-java</groupId>
+        <artifactId>docker-java</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.4.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.0.13</version>
+        <scope>provided</scope>
+      </dependency>
+
+
+      <!-- JavaEE Dependencies -->
+      <dependency>
+        <groupId>org.jboss.spec.javax.ws.rs</groupId>
+        <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+        <version>1.0.0.Final</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.enterprise</groupId>
+        <artifactId>cdi-api</artifactId>
+        <version>1.2</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.spec.javax.websocket</groupId>
+        <artifactId>jboss-websocket-api_1.1_spec</artifactId>
+        <version>1.1.0.Final</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.spec.javax.ejb</groupId>
+        <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+        <version>1.0.0.Final</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.spec.javax.json</groupId>
+        <artifactId>jboss-json-api_1.0_spec</artifactId>
+        <version>1.0.0.Final</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- Wildfly Swarm Dependencies -->
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>wildfly-swarm-undertow-runtime</artifactId>
+        <version>${wildfly-swarm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>wildfly-swarm-jaxrs-weld</artifactId>
+        <version>${wildfly-swarm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>wildfly-swarm-jaxrs-jaxb</artifactId>
+        <version>${wildfly-swarm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>wildfly-swarm-jaxrs-jsonp</artifactId>
+        <version>${wildfly-swarm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>wildfly-swarm-jaxrs-runtime</artifactId>
+        <version>${wildfly-swarm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.wildfly.swarm</groupId>
+        <artifactId>wildfly-swarm-ejb-runtime</artifactId>
+        <version>${wildfly-swarm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.jaxrs</groupId>
+        <artifactId>jackson-jaxrs-json-provider</artifactId>
+        <version>2.4.2</version>
+      </dependency>
+
+      <!-- Test Dependencies -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jmock</groupId>
+        <artifactId>jmock-junit4</artifactId>
+        <version>${jmock.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jmock</groupId>
+        <artifactId>jmock-legacy</artifactId>
+        <version>${jmock.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-core</artifactId>
+        <version>${hamcrest.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-library</artifactId>
+        <version>${hamcrest.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-multipart-provider</artifactId>
+        <version>3.0.10.Final</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>httpclient</artifactId>
+            <groupId>org.apache.httpcomponents</groupId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <modules>
+    <module>api</module>
+    <module>retrievers</module>
+    <module>app</module>
+    <module>git</module>
+    <module>issuetracker</module>
+  </modules>
 
 </project>
