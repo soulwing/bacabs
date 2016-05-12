@@ -181,6 +181,11 @@
         <artifactId>bacabs-issuetracker-jira-basic</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.mikesir87.bacabs</groupId>
+        <artifactId>bacabs-issuetracker-noop</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <!-- Third-party dependencies -->
       <dependency>

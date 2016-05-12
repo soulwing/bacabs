@@ -5,20 +5,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>bacabs</artifactId>
+    <artifactId>bacabs-issuetracker</artifactId>
     <groupId>io.mikesir87.bacabs</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>bacabs-issuetracker</artifactId>
-  <packaging>pom</packaging>
-  <name>Issue Tracker Base Config</name>
+  <artifactId>bacabs-issuetracker-noop</artifactId>
+  <name>JIRA Issue tracker - Noop</name>
 
-  <modules>
-    <module>issuetracker-spi</module>
-    <module>jira</module>
-    <module>jira-basic</module>
-    <module>jira-cas</module>
-    <module>noop</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>io.mikesir87.bacabs</groupId>
+      <artifactId>bacabs-issuetracker-spi</artifactId>
+    </dependency>
+  </dependencies>
+
 </project>

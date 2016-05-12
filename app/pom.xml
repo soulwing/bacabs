@@ -117,6 +117,21 @@
       </dependencies>
     </profile>
     <profile>
+      <id>jira-noop</id>
+      <activation>
+        <property>
+          <name>jiraAuth</name>
+          <value>noop</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>io.mikesir87.bacabs</groupId>
+          <artifactId>bacabs-issuetracker-noop</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>jira-auth-cas</id>
       <activation>
         <property>

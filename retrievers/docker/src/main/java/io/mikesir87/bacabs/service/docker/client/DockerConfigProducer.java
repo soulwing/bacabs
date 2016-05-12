@@ -55,11 +55,4 @@ public class DockerConfigProducer {
     return new DockerConfigImpl(ip, certPath, machine);
   }
 
-  public static void main(String[] args) {
-    DockerConfigProducer producer = new DockerConfigProducer();
-    producer.runningLocally = false;
-    producer.machine = "default";
-    DockerConfig config = producer.dockerConfig();
-    System.out.println(config.getDockerCertPath());
-  }
 }
