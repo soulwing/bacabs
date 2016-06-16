@@ -30,16 +30,25 @@ public class StatusCheckingServiceBean implements StatusCheckingService {
     String verifyUrl = deployment.getHref() + verifyPath;
 
     try {
-      URL url = new URL(verifyUrl);
-      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      connection.setRequestMethod("GET");
-      connection.connect();
-      int code = connection.getResponseCode();
-      connection.disconnect();
+      int code = getResponseCode(verifyUrl);
       return (expectedResponse.equals(code)) ?
           Deployment.Status.VERIFIED : Deployment.Status.UNKNOWN;
     } catch (IOException e) {
       return Deployment.Status.UNKNOWN;
     }
+  }
+
+  private int getResponseCode(String statusUrl) throws IOException {
+    URL url = new URL(statusUrl);
+    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    connection.setInstanceFollowRedirects(true);
+    connection.setRequestMethod("GET");
+    connection.connect();
+    int code = connection.getResponseCode();
+    connection.disconnect();
+    if (code / 100 == 3) {
+      return getResponseCode(connection.getHeaderField("Location"));
+    }
+    return code;
   }
 }
