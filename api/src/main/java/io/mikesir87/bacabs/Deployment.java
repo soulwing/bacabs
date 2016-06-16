@@ -28,7 +28,15 @@ import java.util.Date;
 public interface Deployment {
 
   enum Status {
-    VERIFIED, UNKNOWN
+    VERIFIED("Verified"), UNKNOWN("Unknown");
+
+    private final String displayName;
+
+    Status(String displayName) {
+      this.displayName = displayName;
+    }
+
+    public String getDisplayName() { return displayName; }
   }
 
   /**
