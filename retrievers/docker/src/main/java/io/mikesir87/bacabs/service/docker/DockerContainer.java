@@ -1,16 +1,15 @@
 package io.mikesir87.bacabs.service.docker;
 
 /**
- * An interface that provides details about a Wildfly container running in a
- * Docker container.
+ * An interface that provides details about a running Docker container.
  *
  * @author Michael Irwin
  */
-public interface DockerWildflyContainer {
+public interface DockerContainer {
 
   /**
-   * Get the href for the main HTTP listener
-   * @return The href for the main HTTP listener
+   * Get public href for the container (most likely the virtual host name)
+   * @return The public href
    */
   String getHref();
 

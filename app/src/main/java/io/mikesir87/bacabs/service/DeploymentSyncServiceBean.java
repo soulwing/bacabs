@@ -19,6 +19,7 @@
 package io.mikesir87.bacabs.service;
 
 import io.mikesir87.bacabs.Deployment;
+import io.mikesir87.bacabs.repository.DeploymentRepository;
 import io.mikesir87.bacabs.service.git.GitBranchRetrievalService;
 import io.mikesir87.bacabs.service.jira.JiraIssueRetriever;
 import org.slf4j.Logger;
@@ -78,8 +79,13 @@ public class DeploymentSyncServiceBean implements DeploymentSyncService {
       if (!identifier.matches(identifierPattern))
         continue;
 
+      logger.info("Retrieving/setting jira issue for identifier: " + identifier);
       deployment.setJiraIssue(jiraIssueRetriever.getIssueDetails(identifier));
+
+      logger.info("Retrieving/setting git branch for identifier: " + identifier);
       deployment.setGitBranch(gitBranchRetrievalService.retrieveGitBranch(identifier));
+
+      logger.info("Retrieving/setting deployment status for identifier: " + identifier);
       deployment.setStatus(statusCheckingService.getStatus(deployment));
 
       if (knownDeployments.contains(deployment)) {

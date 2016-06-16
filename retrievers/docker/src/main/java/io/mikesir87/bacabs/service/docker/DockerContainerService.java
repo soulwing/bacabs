@@ -10,8 +10,8 @@ import java.util.Set;
 public interface DockerContainerService {
 
   /**
-   * Get all Docker containers that are running Wildfly
-   * @return The Wildfly containers
+   * Get all Docker containers that are utilizing the nginx-proxy
+   * @return The running containers
    */
-  Set<DockerWildflyContainer> getWildflyContainers();
+  Set<DockerContainer> getHostedContainers();
 }

@@ -19,6 +19,7 @@
 package io.mikesir87.bacabs.service;
 
 import io.mikesir87.bacabs.Deployment;
+import io.mikesir87.bacabs.event.DeploymentStatusChangeEvent;
 import io.mikesir87.bacabs.event.NewDeploymentEvent;
 import io.mikesir87.bacabs.event.RemovedDeploymentEvent;
 import io.mikesir87.bacabs.event.UpdatedDeploymentEvent;
@@ -49,6 +50,9 @@ public class DeploymentServiceBean implements DeploymentService {
 
   @Inject
   protected Event<UpdatedDeploymentEvent> updatedDeploymentEvent;
+
+  @Inject
+  protected Event<DeploymentStatusChangeEvent> statusChangeEvent;
   
   /**
    * {@inheritDoc}
@@ -72,7 +76,8 @@ public class DeploymentServiceBean implements DeploymentService {
    */
   @Override
   public void updateDeployment(Deployment deployment) {
-    deployment = deploymentRepository.updateDeployment(deployment);
+    deployment = deploymentRepository.updateDeployment(deployment,
+        new ChangeListener(deployment));
     updatedDeploymentEvent.fire(new UpdatedDeploymentEvent(deployment));
   }
 
@@ -83,5 +88,20 @@ public class DeploymentServiceBean implements DeploymentService {
   public void removeDeployment(Deployment deployment) {
     deploymentRepository.removeDeployment(deployment);
     removedDeploymentEvent.fire(new RemovedDeploymentEvent(deployment));
+  }
+
+
+  private class ChangeListener implements DeploymentRepository.DeploymentChangeListener {
+
+    private final Deployment deployment;
+
+    public ChangeListener(Deployment deployment) {
+      this.deployment = deployment;
+    }
+
+    @Override
+    public void statusChanged(Deployment.Status oldStatus, Deployment.Status newStatus) {
+      statusChangeEvent.fire(new DeploymentStatusChangeEvent(deployment, oldStatus));
+    }
   }
 }

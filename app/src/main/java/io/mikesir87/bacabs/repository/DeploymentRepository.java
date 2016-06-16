@@ -47,11 +47,16 @@ public interface DeploymentRepository {
    * @return The updated deployment. Not guaranteed to be the same object
    * as that passed in.
    */
-  Deployment updateDeployment(Deployment deployment);
+  Deployment updateDeployment(Deployment deployment,
+      DeploymentChangeListener changeListener);
   
   /**
    * Remove a deployment
    * @param deployment The deployment to remove
    */
   void removeDeployment(Deployment deployment);
+
+  interface DeploymentChangeListener {
+    void statusChanged(Deployment.Status oldStatus, Deployment.Status newStatus);
+  }
 }

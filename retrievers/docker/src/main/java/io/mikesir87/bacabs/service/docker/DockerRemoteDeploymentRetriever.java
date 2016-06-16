@@ -27,7 +27,7 @@ public class DockerRemoteDeploymentRetriever implements RemoteDeploymentRetrieve
   @Override
   public Set<? extends Deployment> fetchDeployments() throws IOException {
     Set<Deployment> deployments = new HashSet<>();
-    for (DockerWildflyContainer container : containerService.getWildflyContainers()) {
+    for (DockerContainer container : containerService.getHostedContainers()) {
       deployments.add(
           deploymentBuilder
               .identifier(container.getIdentifier())

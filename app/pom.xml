@@ -246,6 +246,10 @@
       <groupId>io.mikesir87.bacabs</groupId>
       <artifactId>bacabs-issuetracker-spi</artifactId>
     </dependency>
+    <dependency>
+      <groupId>in.ashwanthkumar</groupId>
+      <artifactId>slack-java-webhook</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.jboss.spec.javax.websocket</groupId>
@@ -258,6 +262,10 @@
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-multipart-provider</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
   </dependencies>
 </project>

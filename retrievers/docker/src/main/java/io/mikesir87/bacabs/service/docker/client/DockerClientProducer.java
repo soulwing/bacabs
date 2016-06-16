@@ -3,6 +3,7 @@ package io.mikesir87.bacabs.service.docker.client;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.netty.DockerCmdExecFactoryImpl;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
@@ -29,13 +30,14 @@ public class DockerClientProducer {
   public DockerClient dockerClient() {
     if (dockerConfig.isRunningLocally()) {
       return DockerClientBuilder
-          .getInstance("http://127.0.0.1:" + dockerConfig.getLocalPort())
+          .getInstance("unix:///var/run/docker.sock")
+          .withDockerCmdExecFactory(new DockerCmdExecFactoryImpl())
           .build();
     }
 
     DockerClientConfig config = DockerClientConfig
         .createDefaultConfigBuilder()
-        .withUri("https://" + dockerConfig.getIp() + ":2376")
+        .withDockerHost("https://" + dockerConfig.getIp() + ":2376")
         .withDockerCertPath(dockerConfig.getDockerCertPath())
         .build();
     return DockerClientBuilder.getInstance(config)

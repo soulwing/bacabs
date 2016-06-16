@@ -58,7 +58,8 @@ public class LocalDeploymentRepository implements DeploymentRepository {
    * {@inheritDoc}
    */
   @Override
-  public Deployment updateDeployment(Deployment deployment) {
+  public Deployment updateDeployment(Deployment deployment,
+      DeploymentChangeListener changeListener) {
     Deployment existing = findDeployment(deployment);
     if (existing == null) {
       addDeployment(deployment);
@@ -72,6 +73,10 @@ public class LocalDeploymentRepository implements DeploymentRepository {
     e.setIdentifier(d.getIdentifier());
     e.setJiraIssue(d.getJiraIssue());
     e.setSummary(d.getSummary());
+
+    if (e.getStatus() != d.getStatus()) {
+      changeListener.statusChanged(e.getStatus(), d.getStatus());
+    }
 
     if (e.getStatus().equals(Deployment.Status.UNKNOWN) &&
         d.getStatus().equals(Deployment.Status.VERIFIED)) {

@@ -37,10 +37,10 @@ public class DockerRemoteDeploymentRetrieverTest {
   private DockerContainerService containerService;
 
   @Mock
-  private DockerWildflyContainer container1;
+  private DockerContainer container1;
 
   @Mock
-  private DockerWildflyContainer container2;
+  private DockerContainer container2;
 
   @Mock
   private Deployment deployment1;
@@ -48,7 +48,7 @@ public class DockerRemoteDeploymentRetrieverTest {
   @Mock
   private Deployment deployment2;
 
-  private Set<DockerWildflyContainer> containers = new HashSet<>();
+  private Set<DockerContainer> containers = new HashSet<>();
 
   private DockerRemoteDeploymentRetriever retriever = new DockerRemoteDeploymentRetriever();
 
@@ -73,7 +73,7 @@ public class DockerRemoteDeploymentRetrieverTest {
   private void setContainerExpectations() {
     context.checking(new Expectations() {
       {
-        oneOf(containerService).getWildflyContainers();
+        oneOf(containerService).getHostedContainers();
         will(returnValue(containers));
 
         oneOf(container1).getHref();
