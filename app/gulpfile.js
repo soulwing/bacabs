@@ -15,7 +15,7 @@ var del                    = require('del'),
     livereload             = require('gulp-livereload'),
     merge                  = require('gulp-merge'),
     minifyHTML             = require('gulp-minify-html'),
-    minifyCSS              = require('gulp-minify-css'),
+    minifyCSS              = require('gulp-clean-css'),
     ngAnnotate             = require('gulp-ng-annotate'),
     rev                    = require('gulp-rev'),
     runSequence            = require('run-sequence'),
@@ -177,7 +177,7 @@ gulp.task('styles', function() {
       .pipe(less({paths : [BOWER_DIR, source.styles.dir]}));
 
   if (ENV == ENV_PROD)
-    styles = styles.pipe(minifyCSS({keepSpecialComments : 1}));
+    styles = styles.pipe(minifyCSS({keepSpecialComments : 1, processImport : false}));
 
   return styles.pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(build.styles.dir));

@@ -14,7 +14,8 @@
     ////////
 
     function _init() {
-      var ws = new WebSocket("ws://" + window.location.host + "/websocket");
+      var protocol = (window.location.protocol.indexOf('https') === 0) ? "wss" : "ws";
+      var ws = new WebSocket(protocol + "://" + window.location.host + "/websocket");
       ws.onopen = _onOpen;
       ws.onclose = _onClose;
       ws.onmessage = _onMessage;
